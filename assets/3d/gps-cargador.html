@@ -1,0 +1,943 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GPS cargador portátil · Visor 3D</title>
+<style>
+  * { box-sizing: border-box; }
+  html, body {
+    margin: 0;
+    height: 100%;
+  }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background: transparent;
+    color: #eef1f6;
+  }
+  .viewer-wrap {
+    position: relative;
+    width: 100%;
+    height: 100vh;
+  }
+  #viewer-canvas { width: 100%; height: 100%; display: block; cursor: grab; touch-action: none; }
+  #viewer-canvas:active { cursor: grabbing; }
+  .hint {
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 12px;
+    color: #8b95a8;
+    background: rgba(0,0,0,0.35);
+    padding: 6px 12px;
+    border-radius: 999px;
+    letter-spacing: 0.2px;
+    pointer-events: none;
+    white-space: nowrap;
+  }
+
+</style>
+</head>
+<body>
+
+<div class="viewer-wrap">
+  <canvas id="viewer-canvas"></canvas>
+  <div class="hint" style="display:none;">Arrastrá para girar · rueda / pellizco para zoom</div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+(function () {
+  const canvas = document.getElementById('viewer-canvas');
+  const wrap = canvas.parentElement;
+
+  const scene = new THREE.Scene();
+
+  const camera = new THREE.PerspectiveCamera(35, 1, 0.1, 100);
+  camera.position.set(0, 0, 20);
+
+  const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true, preserveDrawingBuffer: true });
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+  if (THREE.SRGBColorSpace) renderer.outputColorSpace = THREE.SRGBColorSpace;
+  else if (THREE.sRGBEncoding) renderer.outputEncoding = THREE.sRGBEncoding;
+  renderer.toneMapping = THREE.ACESFilmicToneMapping;
+  renderer.toneMappingExposure = 1.25;
+
+  function resize() {
+    const w = wrap.clientWidth;
+    const h = wrap.clientHeight;
+    renderer.setSize(w, h, false);
+    camera.aspect = w / h;
+    camera.updateProjectionMatrix();
+  }
+  window.addEventListener('resize', resize);
+
+  scene.add(new THREE.AmbientLight(0xffffff, 0.85));
+
+  const key = new THREE.DirectionalLight(0xffffff, 1.3);
+  key.position.set(5, 7, 8);
+  scene.add(key);
+
+  const fill = new THREE.DirectionalLight(0xaac8ff, 0.6);
+  fill.position.set(-6, 2, -4);
+  scene.add(fill);
+
+  const rim = new THREE.DirectionalLight(0xffe9b0, 0.5);
+  rim.position.set(0, -4, -6);
+  scene.add(rim);
+
+  const group = new THREE.Group();
+  scene.add(group);
+
+  // Proportions measured directly from the real product photos. Photo #7
+  // (a clean straight-on shot of the port panel alone) is the ground truth
+  // for the head's true cross-section: it's a wide, flat, pill-shaped
+  // rectangle, roughly 2:1 (width:height) — NOT a squarish box like earlier
+  // drafts assumed. Unlike the round GPS puck, this body isn't a simple
+  // lathe: it's that rounded rectangular "head" (with the USB-C/USB-A port
+  // panel on its outward end) sitting on a tapered cylindrical neck that
+  // ends in a metal cigarette-lighter pin.
+  const BOX_W = 3.6;         // head width (X)
+  const BOX_D = 1.8;         // head depth (Z) — half of BOX_W, matches photo #7's ~2:1 ratio
+  const BOX_H = 2.2;         // head height (Y) — trimmed a bit more off the top, stays compact
+  const BOX_CORNER_R = 0.42; // rounded-corner radius — modest, boxy rounding (not pill-shaped)
+  const CORNER_SEGS = 14;    // arc segments per corner
+
+  // --- Head/handle transition (fillet) ---
+  // Real injection-molded chargers have the head flare continuously down
+  // into the handle, with no seam and no sudden change in curvature — a
+  // single molded surface. These constants drive that transition (see
+  // buildNeckProfile / buildBodyLoftGeometry).
+  const NECK_TOP_R = 0.84;  // handle radius — the handle itself is a straight tube at this radius (no belly); widened another ~10% from 0.76 (final pass) so the neck reads closer to the reference's thicker handle
+  const TRANS_H = 1.3;      // height of the transition zone — taller than before so the flare reads as gradual, not abrupt
+  const TRANS_SEGS = 40;    // vertical resolution of the transition loft (higher = smoother fillet; doubled so the two narrow steps below get enough rings to actually read)
+  const NECK_END_R = 0.30;  // handle radius where the plastic hands off to the metal pin
+  const NECK_END_Y = -2.65; // height where the plastic neck ends and the metal pin begins — the "trompo" taper is short/quick, not a long cone
+
+  // Visible molded collar where the head assembles onto the neck/handle --
+  // ONE subtle step/lip, NOT a squared-off block and NOT a double
+  // staircase. An earlier pass tried two stacked steps; the second (lower)
+  // one read as an extra, unwanted notch right before the neck, so it's
+  // been removed -- this is back to a single flat shelf, one step down,
+  // then a smooth taper the rest of the way to the neck.
+  //
+  //   Cabeza
+  //    ────┐          <- shelf, flush with the head wall (flat, short)
+  //        \___         <- the one step down
+  //            \         <- smooth taper the rest of the way to the neck
+  //             \
+  //              cuello
+  //
+  // jointedValue() walks a chain of flat/stepped control points (SHELF ->
+  // STEP -> taper -> neck), each consecutive pair blended with
+  // smootherstep so it's one continuous surface (no real seam/crease).
+  //
+  // STEP_FRAC is a FRACTION of each dimension's own (head - neck) range
+  // rather than a fixed unit -- hw's range and hd's range are very
+  // different sizes, so a fixed absolute depth that looks right on hw
+  // would swallow hd's entire range and overshoot past the neck value,
+  // creating a false pinch right at the bottom. Scaling by a fraction of
+  // each dimension's own range keeps the step proportionate on every
+  // dimension (hw, hd, and cr, which shrinks rather than grows from neck
+  // to head) automatically.
+  // Baked-in final values: STEP_FRAC=0
+  // disables the carved-in step entirely (it kept reading as an open cut
+  // on the lateral sides no matter how shallow) -- the visible molded line
+  // at the head/neck junction is now handled instead by a separate "raya"
+  // (a proud/raised ring, not a carved notch) added to the default stripes
+  // list below, which doesn't have that cut-through-the-wall problem.
+  let LIP_T = 0.990;
+  let GROOVE_T = 0.950;
+  let STEP_FRAC = 0.000;
+  function smootherstep(t) {
+    return t * t * t * (t * (t * 6 - 15) + 10);
+  }
+  function jointedValue(tRaw, neckVal, headVal) {
+    const dir = headVal >= neckVal ? 1 : -1;
+    const range = Math.abs(headVal - neckVal);
+    const shelfVal = headVal - dir * (STEP_FRAC * range);
+    const points = [
+      { t: 1,        val: headVal },
+      { t: LIP_T,    val: headVal },
+      { t: GROOVE_T, val: shelfVal },
+      { t: 0,        val: neckVal }
+    ];
+    for (let i = 0; i < points.length - 1; i++) {
+      const a = points[i], b = points[i + 1];
+      if (tRaw <= a.t && tRaw >= b.t) {
+        const span = a.t - b.t;
+        const u = span > 0 ? (tRaw - b.t) / span : 1;
+        return b.val + (a.val - b.val) * smootherstep(u);
+      }
+    }
+    return tRaw > 1 ? headVal : neckVal;
+  }
+
+  // The device is solid black plastic all over (only the pin tip and the
+  // two spring side-contacts are bare metal, as in the real photos).
+  const BODY_COLOR = 0x000000;      // solid black plastic -- baked in from the live editor's "Color plástico" picker
+  const METAL_COLOR = 0x38311e;     // pin / spring-contact metal -- baked in from the live editor's "Color pines" picker
+  // Plastic is a DIELECTRIC -- metalness should be near 0. The old
+  // metalness:0.6 made every plastic surface (head/handle/taper) render
+  // with a flat, semi-metallic sheen instead of true plastic reflectance,
+  // which read as cheap opaque jug/jerry-can plastic ("galón") rather than
+  // sleek charger-housing ABS. Low metalness + moderate roughness gives
+  // the soft, slightly glossy highlight real molded plastic has.
+  const plasticParams = { roughness: 0.35, metalness: 0.05 };
+  // At metalness:1.0, MeshStandardMaterial gets essentially NO diffuse
+  // contribution -- its color only shows through specular/environment
+  // reflections, and this scene has no environment map (only ambient +
+  // directional lights). So the pin/contacts rendered almost black instead
+  // of the light gold METAL_COLOR, despite the color being set correctly.
+  // Lowering metalness lets the gold albedo actually read as diffuse
+  // color, while still keeping a shiny, slightly metallic highlight.
+  const metalParams = { roughness: 0.3, metalness: 0.55 }; // polished gold-plated contact finish
+
+
+  // A group holding the whole body, shifted so the object's visual center
+  // (not the box/neck seam) sits at the world origin.
+  const bodyGroup = new THREE.Group();
+  bodyGroup.position.y = 0.025; // (pin tip at y≈-3.55, head top at y=TRANS_H+BOX_H=3.5) -> centers the object vertically
+  group.add(bodyGroup);
+
+  // --- Rounded-rectangle outline for the head's cross-section (X/Z plane) ---
+  function buildRoundedRectOutline(halfW, halfD, cr, segs) {
+    const pts = [];
+    const corners = [
+      { cx: halfW - cr, cz: halfD - cr, a0: 0 },
+      { cx: -halfW + cr, cz: halfD - cr, a0: Math.PI / 2 },
+      { cx: -halfW + cr, cz: -halfD + cr, a0: Math.PI },
+      { cx: halfW - cr, cz: -halfD + cr, a0: 3 * Math.PI / 2 }
+    ];
+    corners.forEach(c => {
+      for (let i = 0; i <= segs; i++) {
+        const a = c.a0 + (Math.PI / 2) * (i / segs);
+        pts.push(new THREE.Vector2(c.cx + cr * Math.cos(a), c.cz + cr * Math.sin(a)));
+      }
+    });
+    return pts;
+  }
+  const headOutline = buildRoundedRectOutline(BOX_W / 2, BOX_D / 2, BOX_CORNER_R, CORNER_SEGS);
+
+  // --- Flat cap (top or bottom of the head) built from the same outline,
+  // with a straight-on planar UV projection (matches how the real photos
+  // were shot), same approach as the round GPS model. ---
+  function buildHeadCapGeometry(outline, yConst, halfW, halfD, uvScale) {
+    const shape = new THREE.Shape(outline);
+    const geo = new THREE.ShapeGeometry(shape);
+    const pos = geo.attributes.position;
+    const uv = geo.attributes.uv;
+    for (let i = 0; i < pos.count; i++) {
+      const x = pos.getX(i);
+      const zShape = pos.getY(i); // shape's local "y" maps to world Z
+      pos.setXYZ(i, x, yConst, zShape);
+      uv.setXY(i, x / (halfW * 2 * uvScale) + 0.5, zShape / (halfD * 2 * uvScale) + 0.5);
+    }
+    pos.needsUpdate = true;
+    uv.needsUpdate = true;
+    geo.computeVertexNormals();
+    return geo;
+  }
+
+  // --- Organic head/handle transition + head wall as ONE continuous,
+  // curvature-continuous surface — not two separate meshes glued together.
+  // A cubic smoothstep (the earlier version) only zeroes out the SLOPE at
+  // the top/bottom of the flare, so the surface is tangent to the flat
+  // sections above and below, but its curvature (2nd derivative) still
+  // jumps abruptly right at each seam — and that curvature jump is exactly
+  // what reads as "a tube glued into a block" instead of one molded part.
+  // A quintic "smootherstep" (6t^5-15t^4+10t^3) zeroes out BOTH the slope
+  // AND the curvature at both ends, so the flare eases into the straight
+  // neck below and the straight head wall above with no visible seam.
+  // The straight head wall itself is now just the top ring of this same
+  // loft (not a separate geometry), so normals are smoothed continuously
+  // across the whole surface in one computeVertexNormals() pass.
+  function buildBodyLoftGeometry(neckR, halfW, halfD, cornerR, segs, transH, wallH, transLevels) {
+    const grid = [];
+    // Flare zone: handle's circle -> head's rounded-rect, y: 0..transH
+    for (let k = 0; k <= transLevels; k++) {
+      const tRaw = k / transLevels;
+      const hw = jointedValue(tRaw, neckR, halfW);
+      const hd = jointedValue(tRaw, neckR, halfD);
+      const cr = Math.max(0.05, jointedValue(tRaw, neckR, cornerR));
+      const y = transH * tRaw;
+      const outline = buildRoundedRectOutline(hw, hd, cr, segs);
+      grid.push(outline.map(p => new THREE.Vector3(p.x, y, p.y)));
+    }
+    // Straight head wall: just one more ring at the top, same cross-section
+    // as the last flare ring (which is already exactly the head outline) —
+    // this makes the wall a natural continuation of the same loft.
+    const topOutline = buildRoundedRectOutline(halfW, halfD, cornerR, segs);
+    grid.push(topOutline.map(p => new THREE.Vector3(p.x, transH + wallH, p.y)));
+
+    const N = grid[0].length;
+    const levels = grid.length - 1;
+    const positions = [];
+    for (let k = 0; k <= levels; k++)
+      for (let i = 0; i < N; i++)
+        positions.push(grid[k][i].x, grid[k][i].y, grid[k][i].z);
+    const indices = [];
+    for (let k = 0; k < levels; k++) {
+      for (let i = 0; i < N; i++) {
+        const i2 = (i + 1) % N;
+        const a = k * N + i, b = k * N + i2, c = (k + 1) * N + i2, d = (k + 1) * N + i;
+        indices.push(a, b, c,  a, c, d);
+      }
+    }
+    const geo = new THREE.BufferGeometry();
+    geo.setAttribute('position', new THREE.Float32BufferAttribute(positions, 3));
+    geo.setIndex(indices);
+    geo.computeVertexNormals();
+    return geo;
+  }
+
+  const bodyLoftGeo = buildBodyLoftGeometry(NECK_TOP_R, BOX_W / 2, BOX_D / 2, BOX_CORNER_R, CORNER_SEGS, TRANS_H, BOX_H, TRANS_SEGS);
+  const headTopGeo = buildHeadCapGeometry(headOutline, TRANS_H + BOX_H, BOX_W / 2, BOX_D / 2, 1.02);
+
+  // Head left as clean, untextured geometry — no photo, no invented detail —
+  // so a custom design/material can be applied to it later.
+  const bodyLoftMat = new THREE.MeshStandardMaterial({ color: BODY_COLOR, ...plasticParams, side: THREE.DoubleSide });
+  const headTopMat = new THREE.MeshStandardMaterial({ color: BODY_COLOR, ...plasticParams, side: THREE.DoubleSide });
+
+  const bodyLoftMesh = new THREE.Mesh(bodyLoftGeo, bodyLoftMat);
+  const headTopMesh = new THREE.Mesh(headTopGeo, headTopMat);
+  // (added to bodyGroup via headGroup, further down where the wrapper
+  // groups are set up)
+
+  // --- Neck + metal pin: a real lathe revolve around Y, same technique as
+  // the round GPS puck. Profile measured from the side-view photos, scaled
+  // down to sit properly under the slimmer head. ---
+  // Uniform Catmull-Rom interpolation through 2D control points (built by
+  // hand instead of relying on a THREE.SplineCurve import, to keep this a
+  // single dependency-free file). Passes exactly through every control
+  // point while keeping the tangent continuous there, so the resulting
+  // profile has no small kinks/facets — unlike the raw straight-line
+  // polyline used before.
+  function catmullRomPoints(pts, samplesPerSegment) {
+    const n = pts.length;
+    const at = i => pts[Math.max(0, Math.min(n - 1, i))];
+    const result = [];
+    for (let i = 0; i < n - 1; i++) {
+      const p0 = at(i - 1), p1 = at(i), p2 = at(i + 1), p3 = at(i + 2);
+      const steps = (i === n - 2) ? samplesPerSegment + 1 : samplesPerSegment;
+      for (let s = 0; s < steps; s++) {
+        const t = s / samplesPerSegment, t2 = t * t, t3 = t2 * t;
+        const x = 0.5 * ((2 * p1.x) + (-p0.x + p2.x) * t + (2 * p0.x - 5 * p1.x + 4 * p2.x - p3.x) * t2 + (-p0.x + 3 * p1.x - 3 * p2.x + p3.x) * t3);
+        const y = 0.5 * ((2 * p1.y) + (-p0.y + p2.y) * t + (2 * p0.y - 5 * p1.y + 4 * p2.y - p3.y) * t2 + (-p0.y + 3 * p1.y - 3 * p2.y + p3.y) * t3);
+        result.push(new THREE.Vector2(x, y));
+      }
+    }
+    return result;
+  }
+
+  // Split into two profiles (handle + taper) instead of one combined
+  // lathe, so the "mango" (straight tube) and the "trompo" (the narrowing
+  // taper) sit in their own groups with independent baked-in offsets/scale.
+  const NECK_STRAIGHT_BOTTOM_Y = -2.3; // where the straight tube ends and the taper begins
+  function buildHandleProfile() {
+    return [
+      new THREE.Vector2(NECK_TOP_R, 0),                  // top — matches the head transition
+      new THREE.Vector2(NECK_TOP_R, NECK_STRAIGHT_BOTTOM_Y) // straight tube, constant radius (no belly)
+    ];
+  }
+  // Trompo shape: a rounded profile made of a "bulge" control point and a
+  // "waist" control point between the tube above and the metal pin below.
+  let TAPER_BULGE_R = 0.570;
+  let TAPER_BULGE_Y_OFFSET = -0.150; // relative to the tube's bottom (NECK_STRAIGHT_BOTTOM_Y)
+  let TAPER_WAIST_R = 0.390;
+  // Clamped to -0.300 instead of the pasted -0.600 -- NECK_END_Y sits only
+  // 0.35 below NECK_STRAIGHT_BOTTOM_Y, so an offset past that pulls the
+  // waist BELOW the pin hand-off point. That makes the taper's own lathe
+  // profile double back on itself (non-monotonic Y), folding the surface
+  // and opening a gap that let the gold pin show through above where the
+  // trompo should fully cover it. -0.300 is the most extreme value that
+  // still stays above the hand-off point (see the safety clamp in
+  // buildTaperProfile() below, which guards against this even if a future
+  // slider drag pushes past it again).
+  let TAPER_WAIST_Y_OFFSET = -0.300; // relative to the tube's bottom
+  // The taper's own top-ring radius, in ITS OWN local space -- kept
+  // separate from NECK_TOP_R because taperGroup and handleGroup carry
+  // different baked-in scale factors. If the top ring were just
+  // NECK_TOP_R, the two meshes' touching edge would land at two different
+  // WORLD radii -- a visible step/seam right where the mango meets the
+  // trompo. syncTaperTopRadius() (further down, called once at load)
+  // keeps this equal to the mango's world radius divided by the trompo's
+  // own scale, so the two meshes' edges land on the exact same world
+  // radius.
+  let TAPER_TOP_R = NECK_TOP_R;
+  function buildTaperProfile() {
+    // Safety clamp: the waist must stay above (less negative than) the
+    // pin hand-off point, and the bulge must stay above the waist -- past
+    // that, the profile's Y stops being
+    // smoothly narrowing, which opens a gap that lets the pin's gold
+    // material show through the fold.
+    const handoffOffset = NECK_END_Y - NECK_STRAIGHT_BOTTOM_Y; // most negative safe offset
+    const safeWaistY = Math.max(TAPER_WAIST_Y_OFFSET, handoffOffset + 0.05);
+    const safeBulgeY = Math.max(TAPER_BULGE_Y_OFFSET, safeWaistY + 0.05);
+    const control = [
+      new THREE.Vector2(TAPER_TOP_R, NECK_STRAIGHT_BOTTOM_Y),                          // top — matches the handle's bottom
+      new THREE.Vector2(TAPER_BULGE_R, NECK_STRAIGHT_BOTTOM_Y + safeBulgeY),            // bulge
+      new THREE.Vector2(TAPER_WAIST_R, NECK_STRAIGHT_BOTTOM_Y + safeWaistY),            // waist
+      new THREE.Vector2(NECK_END_R, NECK_END_Y)                                        // hands off to the metal pin
+    ];
+    return catmullRomPoints(control, 8);
+  }
+  // The pin's own shaft radius, in ITS OWN local space -- same idea as
+  // TAPER_TOP_R above, but for the taper-pin boundary. taperGroup and
+  // pinGroup carry different baked-in scale factors, so without
+  // compensating, the gold shaft would end up either narrower or WIDER
+  // than the black taper's own end radius right where they meet.
+  // syncPinTopRadius() (further down, called once at load) keeps this
+  // equal to the taper's end-world-radius divided by the pin's own scale.
+  let PIN_R = NECK_END_R;
+  function buildPinProfile() {
+    // Cylindrical shaft with a true rounded (hemispherical-cap) end, not a
+    // cone tapering to a point — the real pin has thickness and volume all
+    // the way to its rounded tip. Starts exactly where the plastic neck
+    // ends (same radius, no step). Lengthened so the gold metal actually
+    // protrudes and reads clearly, with only a short black section before it.
+    const CYL_BOTTOM_Y = NECK_END_Y - 0.6;
+    const pts = [
+      new THREE.Vector2(PIN_R, NECK_END_Y),  // top, meets the neck
+      new THREE.Vector2(PIN_R, CYL_BOTTOM_Y) // bottom of the straight cylindrical shaft
+    ];
+    const CAP_STEPS = 6;
+    for (let i = 1; i <= CAP_STEPS; i++) {
+      const a = (Math.PI / 2) * (i / CAP_STEPS);
+      pts.push(new THREE.Vector2(PIN_R * Math.cos(a), CYL_BOTTOM_Y - PIN_R * Math.sin(a)));
+    }
+    return pts;
+  }
+  // --- Full-body outline lookup, used by the "rayas" (stripes) feature
+  // below. Given any world Y, returns the cross-section outline that wraps
+  // all the way around the charger at that height: a rounded rectangle in
+  // the head/flare zone, or a circle (radius read off the handle/taper/pin
+  // profiles) everywhere below. Every outline returned has the SAME point
+  // count, so any two of them can be lofted into a closed band regardless
+  // of which zone each one falls in.
+  const STRIPE_N = 4 * (CORNER_SEGS + 1);
+  function circleOutline(r, n) {
+    const pts = [];
+    for (let i = 0; i < n; i++) {
+      const a = (i / n) * Math.PI * 2;
+      pts.push(new THREE.Vector2(r * Math.cos(a), r * Math.sin(a)));
+    }
+    return pts;
+  }
+  const PIN_SHAFT_BOTTOM_Y = NECK_END_Y - 0.6; // bottom of the pin's straight shaft (before its rounded cap)
+  // `let`, not `const` -- rebuilt by rebuildTaperGeometry() whenever the
+  // trompo's live shape sliders change, so stripes/rayas near the taper
+  // zone (which read radiusAtY()) stay glued to the actual current shape
+  // instead of the shape it had at page load.
+  let radiusProfile = [
+    ...buildHandleProfile(),
+    ...buildTaperProfile(),
+    new THREE.Vector2(NECK_END_R, PIN_SHAFT_BOTTOM_Y)
+  ]; // ordered top (y=0) to bottom -- .x is radius, .y is height
+  function radiusAtY(y) {
+    for (let i = 0; i < radiusProfile.length - 1; i++) {
+      const a = radiusProfile[i], b = radiusProfile[i + 1];
+      if (y <= a.y && y >= b.y) {
+        const t = (a.y - y) / ((a.y - b.y) || 1);
+        return a.x + (b.x - a.x) * t;
+      }
+    }
+    return y > radiusProfile[0].y ? radiusProfile[0].x : radiusProfile[radiusProfile.length - 1].x;
+  }
+  // NOTE: this reads the position/scale of headGroup/handleGroup/
+  // taperGroup/pinGroup (defined further down) at call time, not just
+  // instant-of-definition -- each piece has its own independent baked-in
+  // offset, so a stripe's world Y has to be mapped back into each piece's
+  // own local coordinates before asking it for a radius. Without this,
+  // stripes are computed against the ORIGINAL unshifted body and end up
+  // floating off the actual (shifted) surface in zones where the offsets
+  // don't cancel out.
+  function bodyOutlineAtY(yWorld) {
+    const headY = headGroup.position.y;
+    const handleY = handleGroup.position.y;
+    const taperY = taperGroup.position.y;
+    const taperS = taperGroup.scale.x || 1;
+    const pinY = pinGroup.position.y;
+
+    const headFlareBaseWorld = headY; // world Y of the head's own local y=0
+    const handleBottomWorld = NECK_STRAIGHT_BOTTOM_Y + handleY;
+    const taperBottomWorld = NECK_END_Y * taperS + taperY;
+    const pinShaftBottomWorld = PIN_SHAFT_BOTTOM_Y + pinY;
+
+    if (yWorld >= headFlareBaseWorld) {
+      const yLocal = yWorld - headY;
+      if (yLocal >= TRANS_H) {
+        return buildRoundedRectOutline(BOX_W / 2, BOX_D / 2, BOX_CORNER_R, CORNER_SEGS);
+      }
+      const tRaw = Math.max(0, yLocal / TRANS_H);
+      const hw = jointedValue(tRaw, NECK_TOP_R, BOX_W / 2);
+      const hd = jointedValue(tRaw, NECK_TOP_R, BOX_D / 2);
+      const cr = Math.max(0.05, jointedValue(tRaw, NECK_TOP_R, BOX_CORNER_R));
+      return buildRoundedRectOutline(hw, hd, cr, CORNER_SEGS);
+    }
+    if (yWorld >= handleBottomWorld) {
+      return circleOutline(NECK_TOP_R, STRIPE_N); // straight tube, constant radius
+    }
+    if (yWorld >= taperBottomWorld) {
+      const yLocal = (yWorld - taperY) / taperS; // undo the taper's own offset AND scale
+      return circleOutline(radiusAtY(yLocal) * taperS, STRIPE_N);
+    }
+    if (yWorld >= pinShaftBottomWorld) {
+      return circleOutline(NECK_END_R, STRIPE_N); // straight pin shaft, constant radius
+    }
+    return circleOutline(NECK_END_R, STRIPE_N); // below the pin's rounded cap -- not a sane stripe spot, hold steady
+  }
+  // Push an outline outward along each point's own radial direction --
+  // works for both the circle and the (origin-centered) rounded rect --
+  // so a stripe can sit slightly proud of the surface it wraps.
+  function growOutline(outline, amount) {
+    if (!amount) return outline;
+    return outline.map(p => {
+      const len = Math.hypot(p.x, p.y) || 1;
+      const s = (len + amount) / len;
+      return new THREE.Vector2(p.x * s, p.y * s);
+    });
+  }
+  // Builds one closed 3D band that wraps fully around the charger between
+  // yCenter-thickness/2 and yCenter+thickness/2 -- a true modeled ring, not
+  // a flat decal, so it reads correctly from every angle as you turn it.
+  // The protrusion eases in and back out across several intermediate rings
+  // (a smootherstep triangular ramp, same curve family as the head/handle
+  // fillet above) instead of jumping straight from flush to full protrusion
+  // at two sharp rings -- that instant jump is what read as a "printed
+  // line"; easing it in/out makes the ridge/groove look like a real molded
+  // seam in the plastic instead of a decal sitting on top of it.
+  const STRIPE_RAMP_LEVELS = 8;
+  function buildStripeGeometry(yCenter, thickness, protrusion) {
+    const yBottom = yCenter - thickness / 2;
+    const levels = [];
+    for (let k = 0; k <= STRIPE_RAMP_LEVELS; k++) {
+      const tRaw = k / STRIPE_RAMP_LEVELS; // 0..1 across the band's own height
+      const y = yBottom + thickness * tRaw;
+      const tri = 1 - Math.abs(tRaw * 2 - 1); // 0 at both edges, 1 at the center
+      const eased = tri * tri * tri * (tri * (tri * 6 - 15) + 10); // smootherstep
+      levels.push({ y, outline: growOutline(bodyOutlineAtY(y), protrusion * eased) });
+    }
+    const N = levels[0].outline.length;
+    const positions = [];
+    levels.forEach(l => {
+      for (let i = 0; i < N; i++) positions.push(l.outline[i].x, l.y, l.outline[i].y);
+    });
+    const indices = [];
+    for (let k = 0; k < levels.length - 1; k++) {
+      for (let i = 0; i < N; i++) {
+        const i2 = (i + 1) % N;
+        const a = k * N + i, b = k * N + i2, c = (k + 1) * N + i2, d = (k + 1) * N + i;
+        indices.push(a, b, c,  a, c, d);
+      }
+    }
+    const geo = new THREE.BufferGeometry();
+    geo.setAttribute('position', new THREE.Float32BufferAttribute(positions, 3));
+    geo.setIndex(indices);
+    geo.computeVertexNormals();
+    return geo;
+  }
+
+  const NECK_SEGS = 48;
+  const handleGeo = new THREE.LatheGeometry(buildHandleProfile(), NECK_SEGS);
+  const taperGeo = new THREE.LatheGeometry(buildTaperProfile(), NECK_SEGS);
+  const pinGeo = new THREE.LatheGeometry(buildPinProfile(), NECK_SEGS);
+
+  const neckMat = new THREE.MeshStandardMaterial({ color: BODY_COLOR, ...plasticParams, side: THREE.DoubleSide });
+  const taperMat = new THREE.MeshStandardMaterial({ color: BODY_COLOR, ...plasticParams, side: THREE.DoubleSide });
+  const pinMat = new THREE.MeshStandardMaterial({ color: METAL_COLOR, ...metalParams, side: THREE.DoubleSide });
+
+  const handleMesh = new THREE.Mesh(handleGeo, neckMat);
+  const taperMesh = new THREE.Mesh(taperGeo, taperMat);
+  const pinMesh = new THREE.Mesh(pinGeo, pinMat);
+
+  // --- Top port panel: the REAL reference photo applied as a texture on
+  // the head's flat top cap (not a hand-modeled approximation) -- cropped
+  // tight to the panel itself and embedded inline as a data URI so the
+  // file stays a single self-contained .html with no external image file
+  // to keep track of, and so it loads correctly even when opened directly
+  // (double-click, file://) instead of through a web server.
+  const TOP_PANEL_PHOTO_B64 = "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";
+  const topPanelTex = new THREE.TextureLoader().load('data:image/webp;base64,' + TOP_PANEL_PHOTO_B64);
+  if (THREE.SRGBColorSpace) topPanelTex.colorSpace = THREE.SRGBColorSpace;
+  else if (THREE.sRGBEncoding) topPanelTex.encoding = THREE.sRGBEncoding;
+  headTopMat.map = topPanelTex;
+  headTopMat.color.setHex(0xffffff); // let the photo's own colors show through, unmultiplied by a tinted base color
+
+  // Crops/pans the port-panel photo itself (its own border included)
+  // independently of the cap's position/size. Centered pivot so the crop
+  // zooms in/out from the middle of the image instead of a corner.
+  topPanelTex.center.set(0.5, 0.5);
+  topPanelTex.wrapS = THREE.ClampToEdgeWrapping;
+  topPanelTex.wrapT = THREE.ClampToEdgeWrapping;
+  const tapaTexBase = { offsetX: -0.005, offsetY: -0.060, repeatX: 0.940, repeatY: 0.950 };
+  topPanelTex.offset.set(tapaTexBase.offsetX, tapaTexBase.offsetY);
+  topPanelTex.repeat.set(tapaTexBase.repeatX, tapaTexBase.repeatY);
+
+  // Wrapper groups, each with its own baked-in position/scale so the
+  // model loads already arranged the way it was left in the tuning session.
+  const headGroup = new THREE.Group();
+  headGroup.add(bodyLoftMesh);
+  headGroup.position.set(0, -0.170, 0);
+  bodyGroup.add(headGroup);
+
+  // "Tapa" (the top cap's photo panel) is its own group, split out of
+  // headGroup so its position/scale is independent of the head body.
+  const tapaGroup = new THREE.Group();
+  tapaGroup.add(headTopMesh);
+  tapaGroup.position.set(0.010, -0.170, 0.005);
+  bodyGroup.add(tapaGroup);
+
+  const handleGroup = new THREE.Group();
+  handleGroup.add(handleMesh);
+  handleGroup.position.set(0, 0.140, 0);
+  handleGroup.scale.y = 1.520; // baked-in "Largo" stretch from the live editor's readout
+  bodyGroup.add(handleGroup);
+
+  const taperGroup = new THREE.Group();
+  taperGroup.add(taperMesh);
+  taperGroup.position.set(0, -1.196, 0); // follows the mango's new (longer) bottom -- see handleGroup.scale.y above
+  taperGroup.scale.setScalar(0.940);
+  bodyGroup.add(taperGroup);
+
+  const pinGroup = new THREE.Group();
+  pinGroup.add(pinMesh);
+  pinGroup.position.set(0.020, -0.570, -0.020); // baked-in from the live editor's readout
+  pinGroup.scale.setScalar(1.120);
+  bodyGroup.add(pinGroup);
+
+  // Corrects the taper's own top-ring radius (see TAPER_TOP_R above) so its
+  // touching edge with the mango lands on the exact same world radius as
+  // the mango's own bottom, no matter what "Tamaño" either group currently
+  // has -- eliminates the visible seam/step between the two pieces. Run
+  // once now (mango and trompo start at different default scales, 1.000
+  // and 0.940), and again from the "Tamaño" slider whenever either part's
+  // scale changes.
+  function syncTaperTopRadius() {
+    TAPER_TOP_R = (handleGroup.scale.x * NECK_TOP_R) / (taperGroup.scale.x || 1);
+    rebuildTaperGeometry();
+  }
+  syncTaperTopRadius();
+
+  // Same fix as syncTaperTopRadius(), for the taper-pin boundary instead
+  // of the mango-trompo one -- keeps the gold pin's shaft radius matched
+  // to the black taper's own current end radius, so resizing either part
+  // doesn't make the metal flare out past the plastic right at the seam.
+  function syncPinTopRadius() {
+    PIN_R = (taperGroup.scale.x * NECK_END_R) / (pinGroup.scale.x || 1);
+    rebuildPinGeometry();
+  }
+  syncPinTopRadius();
+
+  // --- Two spring side-contacts on the collar. These are real metal
+  // electrical contacts, not flat tabs: each is a smoothly-rounded, convex
+  // metal pad (an ellipsoid — perfectly smooth "large-bevel" rounding on
+  // every edge, with real thickness/volume) that pokes slightly proud of
+  // the plastic, sitting inside a shallow recessed slot molded into the
+  // collar (a dark, slightly sunken disc directly behind/around it).
+  const CONTACT_Y = -2.1; // near the bottom of the straight tube, close to where the taper starts
+  const CONTACT_SURFACE_R = NECK_TOP_R; // the handle is a straight tube here, so this is just its constant radius
+
+  // Recessed slot (subtly sunken plastic, sits fractionally under the
+  // surface so the metal pad reads as sitting "in" a pocket)
+  const slotGeo = new THREE.CircleGeometry(1, 24);
+  const slotMat = new THREE.MeshStandardMaterial({ color: 0x030303, roughness: 0.5, metalness: 0.1, side: THREE.DoubleSide });
+  const SLOT_R = CONTACT_SURFACE_R - 0.035;
+
+  const slotR = new THREE.Mesh(slotGeo, slotMat);
+  slotR.scale.set(0.17, 0.46, 1);
+  slotR.rotation.y = Math.PI / 2;
+  slotR.position.set(SLOT_R, CONTACT_Y, 0);
+
+  const slotL = new THREE.Mesh(slotGeo, slotMat);
+  slotL.scale.set(0.17, 0.46, 1);
+  slotL.rotation.y = -Math.PI / 2;
+  slotL.position.set(-SLOT_R, CONTACT_Y, 0);
+
+  // Metal contact pad: an ellipsoid, centered so roughly half sinks into
+  // the recess (hidden) and half protrudes proud of the surface, giving a
+  // slightly convex, rounded front face with real volume — fully rounded
+  // on every edge (no flat plane anywhere), longer vertically and poking
+  // out further than before so it reads as a real metal contact.
+  const contactGeo = new THREE.SphereGeometry(1, 24, 18);
+  const contactMat = new THREE.MeshStandardMaterial({ color: METAL_COLOR, ...metalParams, side: THREE.DoubleSide });
+  const CONTACT_RADIAL_HALF = 0.12;
+  const CONTACT_OUTER_R = CONTACT_SURFACE_R + 0.11; // how far the pad pokes out
+  const CONTACT_CENTER_R = CONTACT_OUTER_R - CONTACT_RADIAL_HALF;
+
+  const contactR = new THREE.Mesh(contactGeo, contactMat);
+  contactR.scale.set(CONTACT_RADIAL_HALF, 0.38, 0.13);
+  contactR.position.set(CONTACT_CENTER_R, CONTACT_Y, 0);
+
+  const contactL = new THREE.Mesh(contactGeo, contactMat);
+  contactL.scale.set(CONTACT_RADIAL_HALF, 0.38, 0.13);
+  contactL.position.set(-CONTACT_CENTER_R, CONTACT_Y, 0);
+
+  const sidePinsGroup = new THREE.Group();
+  sidePinsGroup.add(slotR, slotL, contactL, contactR);
+  sidePinsGroup.position.set(0, -0.370, 0); // baked-in from the live editor's readout
+  sidePinsGroup.scale.setScalar(0.990);
+  bodyGroup.add(sidePinsGroup);
+
+  // ================= Rayas / stripes =================
+  // Decorative bands, each one a real modeled ring that wraps fully around
+  // the charger (head + neck + taper) at a given height -- not a flat
+  // image glued on one face.
+  const stripesGroup = new THREE.Group();
+  bodyGroup.add(stripesGroup);
+  const stripes = []; // { id, y, thickness, protrusion, color, mesh, mat }
+  let stripeCounter = 0;
+
+  function rebuildStripeMesh(stripe) {
+    if (stripe.mesh) {
+      stripesGroup.remove(stripe.mesh);
+      stripe.mesh.geometry.dispose();
+    }
+    const geo = buildStripeGeometry(stripe.y, stripe.thickness, stripe.protrusion);
+    stripe.mesh = new THREE.Mesh(geo, stripe.mat);
+    stripesGroup.add(stripe.mesh);
+  }
+
+  // protrusion can be positive (raised ridge) or negative (engraved groove).
+  function makeStripe(y, thickness, protrusion, color) {
+    stripeCounter++;
+    const stripe = {
+      id: stripeCounter, y, thickness, protrusion, color,
+      // roughness/metalness kept matte -- these were left over from when the
+      // rayas were gold ridges (roughness 0.25, metalness 0.5); once the
+      // color changed to black the shiny dielectric/metal specular highlight
+      // still caught the light as a bright streak along the whole curved
+      // ring, reading as an odd glow/shine instead of a flat molded line.
+      mat: new THREE.MeshStandardMaterial({ color, roughness: 0.85, metalness: 0.05, side: THREE.DoubleSide }),
+      mesh: null
+    };
+    rebuildStripeMesh(stripe);
+    stripes.push(stripe);
+    return stripe;
+  }
+  // Default set of stripes -- the two clusters of fine accent grooves near
+  // the base and the top of the head, in the same black as the body
+  // instead of a gold ridge.
+  [1.140, 1.240, 1.360, 3.040, 2.920, 2.800].forEach(y => makeStripe(y, 0.03, 0.015, 0x030303));
+  // Raya 7 -- the wide, barely-raised ring that replaces the old carved-in
+  // "escalón" at the head/neck junction (see the STEP_FRAC=0 note above).
+  makeStripe(0.860, 0.180, 0.015, 0x000000);
+
+  // NOTE: the visible seam/collar where the head joins the neck/handle is
+  // no longer a "raya" stripe overlaid on top -- decorative stripes are
+  // separate meshes riding just above the real surface, and layering one
+  // on a spot where the underlying cross-section is itself changing fast
+  // (the flare) either got swamped by that change or z-fought with it, so
+  // it never read as a real cut. That joint is now baked directly into
+  // the body's own loft geometry instead (see LIP_T/GROOVE_T/STEP_FRAC and
+  // jointedValue() near the top of the file) -- an actual shoulder molded
+  // into the plastic where the neck assembles into the head, not a decal
+  // sitting on it.
+
+  // --- Textures: real product photos, cropped and background-removed ---
+  const texLoader = new THREE.TextureLoader();
+  texLoader.crossOrigin = 'anonymous';
+
+  function applyColorSpace(tex) {
+    if (THREE.SRGBColorSpace) tex.colorSpace = THREE.SRGBColorSpace;
+    else if (THREE.sRGBEncoding) tex.encoding = THREE.sRGBEncoding;
+  }
+
+  // Head (walls, top port panel, bottom) intentionally has no photo or
+  // texture -- left as clean flat-color geometry so a custom design can
+  // be applied to it later. Nothing is generated or invented here.
+
+  // Shared by the neck's own wraparound canvas below: feather each photo's
+  // own left/right edges back down to the flat black base color instead of
+  // butting two different exposures edge-to-edge.
+  function featherEdges(ctx, x, w, h, featherFrac) {
+    const feather = w * featherFrac;
+    ctx.save();
+    ctx.globalCompositeOperation = 'destination-out';
+    const gL = ctx.createLinearGradient(x, 0, x + feather, 0);
+    gL.addColorStop(0, 'rgba(0,0,0,1)');
+    gL.addColorStop(1, 'rgba(0,0,0,0)');
+    ctx.fillStyle = gL;
+    ctx.fillRect(x, 0, feather, h);
+    const gR = ctx.createLinearGradient(x + w - feather, 0, x + w, 0);
+    gR.addColorStop(0, 'rgba(0,0,0,0)');
+    gR.addColorStop(1, 'rgba(0,0,0,1)');
+    ctx.fillStyle = gR;
+    ctx.fillRect(x + w - feather, 0, feather, h);
+    ctx.restore();
+  }
+
+
+  // Neck/handle also left as clean, untextured geometry (no photo) --
+  // same as the head -- ready for a custom design/material later.
+
+  // Soft contact shadow (fake) under the object
+  const shadowTex = (function () {
+    const c = document.createElement('canvas');
+    c.width = c.height = 256;
+    const ctx = c.getContext('2d');
+    const g = ctx.createRadialGradient(128, 128, 10, 128, 128, 128);
+    g.addColorStop(0, 'rgba(0,0,0,0.45)');
+    g.addColorStop(1, 'rgba(0,0,0,0)');
+    ctx.fillStyle = g;
+    ctx.fillRect(0, 0, 256, 256);
+    return new THREE.CanvasTexture(c);
+  })();
+  const shadowMesh = new THREE.Mesh(
+    new THREE.PlaneGeometry(10, 10),
+    new THREE.MeshBasicMaterial({ map: shadowTex, transparent: true, depthWrite: false })
+  );
+  shadowMesh.rotation.x = -Math.PI / 2;
+  scene.add(shadowMesh);
+  // Computed off the pin's actual (rounded) tip instead of a fixed Y, so it
+  // stays under the object regardless of the pin's baked-in position/scale.
+  // SHADOW_GAP matches the spacing the original single-lathe design had
+  // between the pin tip and the ground shadow.
+  const SHADOW_GAP = 0.525;
+  function updateShadowPosition() {
+    const pinLocalTipY = NECK_END_Y - 0.6 - NECK_END_R;
+    const tipWorldY = pinLocalTipY * pinGroup.scale.y + pinGroup.position.y + bodyGroup.position.y;
+    shadowMesh.position.y = tipWorldY - SHADOW_GAP;
+  }
+  updateShadowPosition();
+
+  // Rebuilds the taper's / pin's LatheGeometry from their current profile
+  // functions -- used by syncTaperTopRadius()/syncPinTopRadius() above to
+  // apply the seam-matching radius corrections at load.
+  function rebuildTaperGeometry() {
+    const newGeo = new THREE.LatheGeometry(buildTaperProfile(), NECK_SEGS);
+    taperMesh.geometry.dispose();
+    taperMesh.geometry = newGeo;
+    radiusProfile = [
+      ...buildHandleProfile(),
+      ...buildTaperProfile(),
+      new THREE.Vector2(NECK_END_R, PIN_SHAFT_BOTTOM_Y)
+    ];
+  }
+  function rebuildPinGeometry() {
+    const newGeo = new THREE.LatheGeometry(buildPinProfile(), NECK_SEGS);
+    pinMesh.geometry.dispose();
+    pinMesh.geometry = newGeo;
+  }
+
+  // --- Interaction: drag to rotate, wheel/pinch to zoom ---
+  let isDown = false;
+  let lastX = 0, lastY = 0;
+  let rotY = 0.5, rotX = -0.05;
+  let targetRotY = rotY, targetRotX = rotX;
+  const STATIC_PREVIEW = new URLSearchParams(location.search).get('static') === '1';
+  let autoRotate = !STATIC_PREVIEW;
+  let autoRotateDir = 1;
+  // Full 360 degree orbit is allowed on the Y axis (all materials are solid
+  // procedural colors, not photo textures, so there is no seam to hide).
+  const ROT_X_LIMIT = 1.2;
+
+  function pointerDown(x, y) {
+    isDown = true;
+    autoRotate = false;
+    lastX = x; lastY = y;
+  }
+  function pointerMove(x, y) {
+    if (!isDown) return;
+    const dx = x - lastX;
+    const dy = y - lastY;
+    lastX = x; lastY = y;
+    targetRotY += dx * 0.008;
+    targetRotX += dy * 0.008;
+    targetRotX = Math.max(-ROT_X_LIMIT, Math.min(ROT_X_LIMIT, targetRotX));
+  }
+  function pointerUp() { isDown = false; }
+
+  canvas.addEventListener('mousedown', e => pointerDown(e.clientX, e.clientY));
+  window.addEventListener('mousemove', e => pointerMove(e.clientX, e.clientY));
+  window.addEventListener('mouseup', pointerUp);
+
+  canvas.addEventListener('touchstart', e => {
+    const t = e.touches[0];
+    pointerDown(t.clientX, t.clientY);
+  }, { passive: true });
+  canvas.addEventListener('touchmove', e => {
+    const t = e.touches[0];
+    pointerMove(t.clientX, t.clientY);
+  }, { passive: true });
+  canvas.addEventListener('touchend', pointerUp);
+
+  let dist = 20;
+  let targetDist = dist;
+  canvas.addEventListener('wheel', e => {
+    e.preventDefault();
+    targetDist += e.deltaY * 0.02;
+    targetDist = Math.max(12, Math.min(32, targetDist));
+  }, { passive: false });
+
+  let pinchStart = null;
+  canvas.addEventListener('touchstart', e => {
+    if (e.touches.length === 2) {
+      pinchStart = Math.hypot(
+        e.touches[0].clientX - e.touches[1].clientX,
+        e.touches[0].clientY - e.touches[1].clientY
+      );
+    }
+  }, { passive: true });
+  canvas.addEventListener('touchmove', e => {
+    if (e.touches.length === 2 && pinchStart) {
+      const d = Math.hypot(
+        e.touches[0].clientX - e.touches[1].clientX,
+        e.touches[0].clientY - e.touches[1].clientY
+      );
+      targetDist += (pinchStart - d) * 0.03;
+      targetDist = Math.max(12, Math.min(32, targetDist));
+      pinchStart = d;
+    }
+  }, { passive: true });
+
+  function animate() {
+    requestAnimationFrame(animate);
+
+    if (autoRotate) {
+      targetRotY += 0.006 * autoRotateDir; // continuous full-circle spin, no bounce-back limit
+    }
+
+    rotY += (targetRotY - rotY) * 0.12;
+    rotX += (targetRotX - rotX) * 0.12;
+    dist += (targetDist - dist) * 0.12;
+
+    group.rotation.y = rotY;
+    group.rotation.x = rotX;
+
+    camera.position.set(0, 0, dist);
+    camera.lookAt(0, 0, 0);
+
+    renderer.render(scene, camera);
+  }
+
+  resize();
+  animate();
+})();
+</script>
+
+<button id="capture-btn" style="position:fixed;left:10px;bottom:10px;z-index:999;padding:8px 14px;background:#111;color:#fff;border:0;border-radius:6px;font:13px system-ui;cursor:pointer;display:none;">Descargar imagen (WEBP)</button>
+<script>
+(function() {
+  if (new URLSearchParams(location.search).get('capture') !== '1') return;
+  var btn = document.getElementById('capture-btn');
+  btn.style.display = 'block';
+  btn.addEventListener('click', function() {
+    var canvas = document.getElementById('viewer-canvas');
+    canvas.toBlob(function(blob) {
+      if (!blob) { alert('No se pudo capturar la imagen. Intenta girar el modelo y volver a intentar.'); return; }
+      var a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = 'gps-cargador.webp';
+      a.click();
+    }, 'image/webp', 0.92);
+  });
+})();
+</script>
+</body>
+</html>
