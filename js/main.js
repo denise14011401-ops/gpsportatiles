@@ -115,6 +115,50 @@ function initHeaderScrollState() {
   onScroll();
 }
 
+function initThemeToggle() {
+  const btn = document.getElementById("themeToggle");
+  if (!btn) return;
+
+  const root = document.documentElement;
+  const reduceMotion = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  btn.addEventListener("click", () => {
+    const goingLight = root.getAttribute("data-theme") !== "light";
+
+    const applyTheme = () => {
+      if (goingLight) {
+        root.setAttribute("data-theme", "light");
+      } else {
+        root.removeAttribute("data-theme");
+      }
+      try {
+        localStorage.setItem("gp-theme", goingLight ? "light" : "dark");
+      } catch (err) {
+        // Si el navegador bloquea localStorage (modo privado, etc.), el
+        // tema igual cambia, solo no se recuerda para la próxima visita.
+      }
+    };
+
+    if (!document.startViewTransition || reduceMotion) {
+      applyTheme();
+      return;
+    }
+
+    const rect = btn.getBoundingClientRect();
+    const x = rect.left + rect.width / 2;
+    const y = rect.top + rect.height / 2;
+    const endRadius = Math.hypot(Math.max(x, window.innerWidth - x), Math.max(y, window.innerHeight - y));
+
+    const transition = document.startViewTransition(() => applyTheme());
+    transition.ready.then(() => {
+      root.animate(
+        { clipPath: [`circle(0px at ${x}px ${y}px)`, `circle(${endRadius}px at ${x}px ${y}px)`] },
+        { duration: 600, easing: "cubic-bezier(.16,.84,.44,1)", pseudoElement: "::view-transition-new(root)" }
+      );
+    });
+  });
+}
+
 function initNavToggle() {
   const toggle = document.querySelector(".nav-toggle");
   const header = document.querySelector(".site-header");
@@ -369,8 +413,14 @@ function initProductDetail() {
     galleryMain.removeAttribute("tabindex");
     galleryMain.removeAttribute("aria-pressed");
     galleryMain.removeAttribute("aria-label");
-    galleryMain.innerHTML = `<span class="chip chip--shipping gallery-shipping-badge">Envío gratis</span><iframe src="${product.model3d}" title="Vista 3D interactiva de ${product.nombre} — arrastra para girar, rueda o pellizco para acercar" loading="lazy"></iframe><button class="gallery-3d-lock" type="button" data-gallery-lock aria-label="Toca para desbloquear y mover el GPS"><span class="gallery-3d-lock-badge"><svg aria-hidden="true" focusable="false"><use href="#icon-lock"></use></svg><span>Toca para desbloquear y mover el GPS</span></span></button>`;
+    galleryMain.innerHTML = `<span class="chip chip--shipping gallery-shipping-badge">Envío gratis</span><iframe src="${product.model3d}" title="Vista 3D interactiva de ${product.nombre} — arrastra para girar, rueda o pellizco para acercar" loading="lazy"></iframe><button class="gallery-3d-lock" type="button" data-gallery-lock aria-label="Toca para desbloquear y mover el GPS"><span class="gallery-3d-lock-badge"><svg aria-hidden="true" focusable="false"><use href="#icon-lock"></use></svg><span>Toca para desbloquear y mover el GPS</span></span></button><button class="gallery-3d-relock" type="button" data-gallery-relock aria-label="Bloquear el desplazamiento del 3D"></button>`;
     const lockBtn = galleryMain.querySelector("[data-gallery-lock]");
+    const relockBtn = galleryMain.querySelector("[data-gallery-relock]");
+    if (relockBtn) {
+      relockBtn.addEventListener("click", () => {
+        galleryMain.classList.remove("is-unlocked");
+      });
+    }
     if (lockBtn) {
       lockBtn.addEventListener("click", () => {
         galleryMain.classList.add("is-unlocked");
@@ -1424,6 +1474,7 @@ function initAiAssistant() {
 document.addEventListener("DOMContentLoaded", () => {
   initLoader();
   initHeaderScrollState();
+  initThemeToggle();
   initNavToggle();
   initBackToTop();
   initHeaderSearch();
