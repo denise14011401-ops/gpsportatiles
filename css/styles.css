@@ -109,6 +109,15 @@ html[data-theme="light"] body::before { background: none; }
 /* ---------------------------------------------------------------------- */
 *, *::before, *::after { box-sizing: border-box; }
 html { scroll-behavior: smooth; }
+
+/* Scrollbar con el color de acento (igual a KnoxTrack) */
+html { scrollbar-width: thin; scrollbar-color: var(--blue-600) var(--bg-2); }
+::-webkit-scrollbar { width: 12px; height: 12px; }
+::-webkit-scrollbar-track { background: var(--bg-2); }
+::-webkit-scrollbar-thumb { background: var(--blue-600); border-radius: 999px; border: 3px solid var(--bg-2); }
+::-webkit-scrollbar-thumb:hover { background: #ff4d73; }
+::-webkit-scrollbar-corner { background: var(--bg-2); }
+::-webkit-scrollbar-button { display: none; }
 body {
   margin: 0;
   font-family: var(--font-body);
