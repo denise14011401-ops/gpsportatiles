@@ -2,7 +2,7 @@
    GPS PORTÁTILES — Sistema de diseño
    --------------------------------------------------------------------------
    Tipografía:  Archivo (display) · Inter (texto) · JetBrains Mono (datos)
-   Color:       Navy #0F172A · Azul #2563EB · Verde #22C55E (uso restringido)
+   Color:       Navy #0F172A · Rojo #FA1E4E · Verde #22C55E (uso restringido)
    Filosofía:   Bordes precisos, casi sin sombra, jerarquía por tipografía
                 y espaciado — no por decoración. El verde y los datos en
                 monoespaciada se reservan para estados reales (stock, señal,
@@ -14,10 +14,10 @@
   --navy-900: #0F172A;
   --navy-800: #172038;
   --navy-700: #1E293B;
-  --blue-600: #2563EB;
-  --blue-700: #1D4ED8;
-  --blue-50:  #EFF6FF;
-  --blue-100: #DBEAFE;
+  --blue-600: #FA1E4E;
+  --blue-700: #C4123C;
+  --blue-50:  rgba(250, 30, 78, 0.12);
+  --blue-100: rgba(250, 30, 78, 0.22);
   --green-500: #22C55E;
   --green-600: #16A34A;
   --green-700: #15803D;
@@ -32,6 +32,8 @@
   --bg: #070B14;
   --bg-2: #0B1120;
   --nav-bg: rgba(7, 11, 20, 0.72);
+  --surface: rgba(255, 255, 255, 0.045);
+  --surface-strong: rgba(255, 255, 255, 0.07);
   --border: rgba(255, 255, 255, 0.09);
   --border-strong: rgba(255, 255, 255, 0.16);
   --text: #F3F6FB;
@@ -39,7 +41,7 @@
   --text-faint: #6C7891;
 
   /* ---- Tipografía ---- */
-  --font-display: "Archivo", "Inter", system-ui, sans-serif;
+  --font-display: "Inter", system-ui, sans-serif;
   --font-body: "Inter", system-ui, sans-serif;
   --font-mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", monospace;
 
@@ -73,6 +75,8 @@ html[data-theme="light"] {
   --bg: #F8FAFC;
   --bg-2: #F1F5F9;
   --nav-bg: rgba(255, 255, 255, 0.92);
+  --surface: rgba(11, 17, 32, 0.035);
+  --surface-strong: rgba(11, 17, 32, 0.065);
   --border: #E2E8F0;
   --border-strong: #CBD5E1;
   --text: #111827;
@@ -127,6 +131,7 @@ h1, h2, h3, h4 {
   letter-spacing: -0.015em;
   line-height: 1.15;
 }
+h1 { font-weight: 800; }
 p { margin: 0; }
 :focus-visible { outline: 2px solid var(--blue-600); outline-offset: 3px; border-radius: 2px; }
 
@@ -175,7 +180,7 @@ p { margin: 0; }
 .btn-whatsapp { background: var(--green-700); color: #fff; }
 .btn-whatsapp:hover { background: var(--green-800); }
 .btn-outline { background: transparent; color: var(--text); border-color: var(--border-strong); }
-.btn-outline:hover { border-color: var(--text); background: var(--bg); }
+.btn-outline:hover { border-color: var(--border-strong); background: var(--surface-strong); }
 .btn-sm { height: 38px; padding: 0 16px; font-size: 0.83rem; }
 .btn-lg { height: 52px; padding: 0 28px; font-size: 0.95rem; }
 .btn-block { width: 100%; }
@@ -307,7 +312,7 @@ html[data-theme="light"] .theme-icon-moon { opacity: 1; transform: rotate(0deg) 
   overflow: hidden; display: flex; flex-direction: column;
   transition: border-color var(--t-base) var(--ease), box-shadow var(--t-base) var(--ease), transform var(--t-base) var(--ease);
 }
-.card-product:hover { border-color: var(--border-strong); box-shadow: var(--shadow-md); transform: translateY(-3px); }
+.card-product:hover { border-color: var(--border-strong); background: var(--surface-strong); box-shadow: var(--shadow-md); transform: translateY(-3px); }
 .card-product__media {
   aspect-ratio: 4/3; background: var(--bg); display: flex; align-items: center; justify-content: center;
   position: relative; border-bottom: 1px solid var(--border); overflow: hidden;
