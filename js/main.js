@@ -122,21 +122,18 @@ function initThemeToggle() {
   const root = document.documentElement;
   const reduceMotion = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
+  btn.setAttribute("aria-label", root.getAttribute("data-theme") === "dark" ? "Cambiar a tema claro" : "Cambiar a tema oscuro");
+
   btn.addEventListener("click", () => {
-    const goingLight = root.getAttribute("data-theme") !== "light";
+    const goingDark = root.getAttribute("data-theme") !== "dark";
 
     const applyTheme = () => {
-      if (goingLight) {
-        root.setAttribute("data-theme", "light");
+      if (goingDark) {
+        root.setAttribute("data-theme", "dark");
       } else {
         root.removeAttribute("data-theme");
       }
-      try {
-        localStorage.setItem("gp-theme", goingLight ? "light" : "dark");
-      } catch (err) {
-        // Si el navegador bloquea localStorage (modo privado, etc.), el
-        // tema igual cambia, solo no se recuerda para la próxima visita.
-      }
+      btn.setAttribute("aria-label", goingDark ? "Cambiar a tema claro" : "Cambiar a tema oscuro");
     };
 
     if (!document.startViewTransition || reduceMotion) {
