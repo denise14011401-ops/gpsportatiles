@@ -110,7 +110,7 @@ html[data-theme="dark"] body::before {
 /* Reset                                                                   */
 /* ---------------------------------------------------------------------- */
 *, *::before, *::after { box-sizing: border-box; }
-html { scroll-behavior: smooth; }
+html { scroll-behavior: smooth; overflow-x: hidden; overflow-y: visible; max-width: 100%; }
 
 /* Scrollbar con el color de acento (igual a KnoxTrack) */
 html { scrollbar-width: thin; scrollbar-color: var(--blue-600) var(--bg-2); }
@@ -127,6 +127,8 @@ body {
   color: var(--text);
   background: var(--white);
   line-height: 1.6;
+  overflow-x: hidden;
+  max-width: 100%;
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
 }
@@ -506,24 +508,25 @@ html[data-theme="dark"] .theme-icon-moon { opacity: 1; transform: rotate(0deg) s
 .gallery-shipping-badge { position: absolute; top: 14px; left: 14px; z-index: 3; }
 
 .btn-360 {
-  display: block; width: 100%; max-width: 220px; margin: var(--sp-4) auto 0;
+  display: block; width: 100%; max-width: 300px; margin: var(--sp-4) auto 0;
   padding: 0; border: 0; background: transparent; border-radius: 999px;
   cursor: pointer; transition: transform var(--t-base) var(--ease);
 }
 .btn-360:hover { transform: translateY(-1px); }
-.btn-360 svg { display: block; width: 100%; height: auto; }
+.btn-360 img { display: block; width: 100%; height: auto; }
 
-.viewer-360 { position: fixed; inset: 0; z-index: 900; background: rgba(7, 11, 20, 0.94); }
+.viewer-360 { position: fixed; inset: 0; height: 100dvh; z-index: 900; background: rgba(7, 11, 20, 0.94); }
 .viewer-360-frame { width: 100%; height: 100%; border: 0; }
 .viewer-360-close {
-  position: absolute; top: 18px; right: 18px; z-index: 2; width: 42px; height: 42px;
-  border-radius: 50%; border: 0; background: rgba(255, 255, 255, 0.12); color: #fff;
+  position: absolute; top: max(18px, env(safe-area-inset-top)); right: max(18px, env(safe-area-inset-right));
+  z-index: 5; width: 42px; height: 42px;
+  border-radius: 50%; border: 0; background: rgba(255, 255, 255, 0.16); color: #fff;
   font-size: 1.6rem; line-height: 1; display: flex; align-items: center; justify-content: center;
   backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px);
 }
-.viewer-360-close:hover { background: rgba(255, 255, 255, 0.22); }
+.viewer-360-close:hover { background: rgba(255, 255, 255, 0.28); }
 @media (max-width: 480px) {
-  .viewer-360-close { top: 12px; right: 12px; width: 38px; height: 38px; }
+  .viewer-360-close { top: max(14px, env(safe-area-inset-top)); right: max(14px, env(safe-area-inset-right)); width: 40px; height: 40px; font-size: 1.5rem; }
 }
 .gallery-main iframe { width: 100%; height: 100%; border: 0; display: block; }
 .gallery-main:hover { border-color: var(--border-strong); }
