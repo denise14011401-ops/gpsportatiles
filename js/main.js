@@ -134,6 +134,12 @@ function initThemeToggle() {
         root.removeAttribute("data-theme");
       }
       btn.setAttribute("aria-label", goingDark ? "Cambiar a tema claro" : "Cambiar a tema oscuro");
+      try {
+        localStorage.setItem("gp-theme", goingDark ? "dark" : "light");
+      } catch (err) {
+        // Si el navegador bloquea localStorage (modo privado, etc.), el
+        // tema igual cambia, solo no se recuerda para la próxima visita.
+      }
     };
 
     if (!document.startViewTransition || reduceMotion) {
@@ -429,8 +435,8 @@ function initProductDetail() {
     if (arBtn) arBtn.hidden = true;
   }
   document.querySelector("[data-product-eyebrow]").textContent = product.linea;
-  document.querySelector("[data-product-name]").textContent = product.nombre;
-  document.querySelector("[data-product-sku]").textContent = `SKU ${product.sku}`;
+  document.querySelector("[data-product-name]").innerHTML = product.nombre.replace(/\bTAG\b/, '<span class="accent">TAG</span>');
+  document.querySelector("[data-product-sku]").textContent = product.subtitulo;
   document.querySelector("[data-product-rating]").innerHTML = `${starRating(product.rating)} <span>${product.rating}</span><span class="rating-count">(${product.reviews} reseñas)</span>`;
   document.querySelector("[data-product-price]").textContent = formatPrice(product.precio);
 
@@ -445,12 +451,45 @@ function initProductDetail() {
   stockEl.innerHTML = `<span class="dot"></span>${product.disponibilidadTexto}`;
   document.querySelector("[data-product-desc]").textContent = product.descripcionLarga;
 
+  const mockupVideo = document.querySelector("[data-mockup-video]");
+  if (mockupVideo && product.id === "rastreador-mini-tag") {
+    mockupVideo.querySelector("[data-mockup-video-src]").src = "assets/images/app-mockups/mockup-video.webp";
+    mockupVideo.hidden = false;
+  }
+
+  const quickfactsHeading = document.querySelector("[data-quickfacts-heading]");
+  if (quickfactsHeading && product.id === "rastreador-mini-tag") {
+    quickfactsHeading.textContent = "¿Por qué elegir el TAG?";
+    quickfactsHeading.hidden = false;
+  }
+
+  const usesBlock = document.querySelector("[data-uses-block]");
+  if (usesBlock && product.id === "rastreador-mini-tag") {
+    usesBlock.hidden = false;
+    const usesToggle = usesBlock.querySelector("[data-uses-toggle]");
+    const usesImg = usesBlock.querySelector(".zoomable-img");
+    usesToggle.addEventListener("click", () => usesImg.click());
+  }
+
+  initPhotoLightbox(document);
+
   document.querySelector("[data-fact-red]").textContent = product.red;
   document.querySelector("[data-fact-bateria]").textContent = product.bateriaDias;
   document.querySelector("[data-fact-cobertura]").textContent = product.cobertura;
   document.querySelector("[data-fact-garantia]").textContent = product.garantia;
 
-  document.querySelector("[data-product-caracteristicas]").innerHTML = product.caracteristicas.map((c) => `<li>${c}</li>`).join("");
+  const caracteristicasEl = document.querySelector("[data-product-caracteristicas]");
+  if (product.caracteristicasDestacadas) {
+    caracteristicasEl.classList.add("feature-cards");
+    document.querySelector("[data-caracteristicas-section]").classList.add("pdp-summary-block--wide");
+    caracteristicasEl.innerHTML = product.caracteristicasDestacadas
+      .map(
+        (c) => `<li class="feature-card"><span class="feature-card-icon"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">${c.svg}</svg></span><span>${c.label}</span></li>`
+      )
+      .join("");
+  } else {
+    caracteristicasEl.innerHTML = product.caracteristicas.map((c) => `<li>${c}</li>`).join("");
+  }
 
   const specs = [
     ["Compatibilidad", product.compatibilidad],
@@ -486,7 +525,6 @@ function initProductDetail() {
       </article>`
       )
       .join("");
-    initPhotoLightbox(reviewsEl);
   }
 
   initOrderModal(product);
@@ -712,7 +750,7 @@ function initPhotoLightbox(scopeEl) {
     img.src = "";
   }
 
-  scopeEl.querySelectorAll(".review-photo").forEach((photo) => {
+  scopeEl.querySelectorAll(".review-photo, .zoomable-img").forEach((photo) => {
     photo.addEventListener("click", () => open(photo.src, photo.alt));
   });
   closeBtn.addEventListener("click", close);
@@ -1322,150 +1360,22 @@ function initCardModels() {
 }
 
 
-function initAiAssistant() {
-  const bot = document.getElementById("ai-bot");
-  if (!bot) return;
+function initAudioPlayer() {
+  const btn = document.getElementById("audio-player-btn");
+  const audio = document.getElementById("ai-audio");
+  if (!btn || !audio) return;
 
-  const bubble     = document.getElementById("ai-bubble");
-  const audio      = document.getElementById("ai-audio");
-  const pupilL     = document.getElementById("pupilL");
-  const pupilR     = document.getElementById("pupilR");
-  const eyeL       = document.getElementById("eyeL");
-  const eyeR       = document.getElementById("eyeR");
-  const particlesC = document.getElementById("ai-particles");
-
-  // Los ojos siguen el cursor (solo la pupila, no la cabeza)
-  const MAX_OFFSET = 3.4;
-  let targetX = 0, targetY = 0, curX = 0, curY = 0, ticking = false;
-
-  function updatePupilTarget(clientX, clientY) {
-    const rect = bot.getBoundingClientRect();
-    const cx = rect.left + rect.width * 0.5;
-    const cy = rect.top + rect.height * 0.4;
-    const dx = clientX - cx;
-    const dy = clientY - cy;
-    const dist = Math.hypot(dx, dy) || 1;
-    const clamped = Math.min(dist, 220);
-    const ratio = (clamped / 220) * MAX_OFFSET;
-    targetX = (dx / dist) * ratio;
-    targetY = (dy / dist) * ratio;
-    requestTick();
-  }
-  function requestTick() {
-    if (ticking) return;
-    ticking = true;
-    requestAnimationFrame(applyPupils);
-  }
-  function applyPupils() {
-    curX += (targetX - curX) * 0.25;
-    curY += (targetY - curY) * 0.25;
-    const t = `translate(${curX.toFixed(2)}px, ${curY.toFixed(2)}px)`;
-    pupilL.style.transform = t;
-    pupilR.style.transform = t;
-    if (Math.abs(targetX - curX) > 0.05 || Math.abs(targetY - curY) > 0.05) {
-      requestAnimationFrame(applyPupils);
+  btn.addEventListener("click", () => {
+    if (audio.paused) {
+      audio.play().catch(() => {});
     } else {
-      ticking = false;
-    }
-  }
-  window.addEventListener("mousemove", (e) => updatePupilTarget(e.clientX, e.clientY), { passive: true });
-  window.addEventListener("touchmove", (e) => {
-    if (e.touches && e.touches[0]) updatePupilTarget(e.touches[0].clientX, e.touches[0].clientY);
-  }, { passive: true });
-
-  // Parpadeo aleatorio entre 2 y 7 segundos
-  function scheduleBlink() {
-    const delay = 2000 + Math.random() * 5000;
-    setTimeout(() => {
-      eyeL.classList.add("blink");
-      eyeR.classList.add("blink");
-      setTimeout(() => {
-        eyeL.classList.remove("blink");
-        eyeR.classList.remove("blink");
-      }, 260);
-      scheduleBlink();
-    }, delay);
-  }
-  scheduleBlink();
-
-  // Burbuja de mensaje: aparece, se oculta a los 6s, se repite cada 30s
-  const MESSAGES = ["El robot: toca para escuchar", "Conoce este producto"];
-  let msgIndex = 0;
-  function showBubble() {
-    bubble.textContent = MESSAGES[msgIndex % MESSAGES.length];
-    msgIndex++;
-    bubble.classList.add("show");
-    setTimeout(() => bubble.classList.remove("show"), 6000);
-  }
-  setTimeout(showBubble, 1500);
-  setInterval(showBubble, 30000);
-
-  // Partículas: trayectorias aleatorias vía variables CSS
-  const PARTICLE_COUNT = 8;
-  for (let i = 0; i < PARTICLE_COUNT; i++) {
-    const p = document.createElement("span");
-    p.className = "p";
-    const angle = Math.random() * Math.PI * 2;
-    const dist = 30 + Math.random() * 26;
-    const dx = Math.cos(angle) * dist;
-    const dy = Math.sin(angle) * dist - 18;
-    p.style.setProperty("--dx", dx.toFixed(1) + "px");
-    p.style.setProperty("--dy", dy.toFixed(1) + "px");
-    p.style.animationDuration = (1.1 + Math.random() * 1.1).toFixed(2) + "s";
-    p.style.animationDelay = (Math.random() * 1.2).toFixed(2) + "s";
-    particlesC.appendChild(p);
-  }
-
-  // Reproduce automáticamente al cargar la página. Si el navegador bloquea
-  // el autoplay con sonido (algo común en la primera visita), se queda listo
-  // para arrancar con el primer toque, sin mostrar ningún error visible.
-  function startTalking() {
-    bot.classList.add("talking", "bounce");
-    setTimeout(() => bot.classList.remove("bounce"), 560);
-  }
-  function stopTalking() {
-    bot.classList.remove("talking");
-  }
-  function attemptAutoplay() {
-    const playPromise = audio.play();
-    if (playPromise && typeof playPromise.then === "function") {
-      playPromise.then(startTalking).catch(() => {
-        // Autoplay bloqueado por el navegador: se espera el primer toque.
-      });
-    } else {
-      startTalking();
-    }
-  }
-  attemptAutoplay();
-
-  // Un toque alterna: si está sonando lo pausa, si está pausado lo reanuda.
-  function togglePlayback() {
-    try {
-      if (audio.paused) {
-        const playPromise = audio.play();
-        if (playPromise && typeof playPromise.then === "function") {
-          playPromise.then(startTalking).catch(() => {
-            console.warn("No se pudo reproducir el audio del asistente.");
-          });
-        } else {
-          startTalking();
-        }
-      } else {
-        audio.pause();
-      }
-    } catch (err) {
-      console.warn("Error al controlar el audio del asistente:", err);
-    }
-  }
-  audio.addEventListener("ended", stopTalking);
-  audio.addEventListener("pause", stopTalking);
-  bot.addEventListener("click", togglePlayback);
-  bot.addEventListener("keydown", (e) => {
-    if (e.key === "Enter" || e.key === " ") {
-      e.preventDefault();
-      togglePlayback();
+      audio.pause();
     }
   });
+
+  audio.addEventListener("play", () => btn.classList.add("is-playing"));
+  audio.addEventListener("pause", () => btn.classList.remove("is-playing"));
+  audio.addEventListener("ended", () => btn.classList.remove("is-playing"));
 }
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -1486,7 +1396,7 @@ document.addEventListener("DOMContentLoaded", () => {
   initCardModels();
   initGalleryZoom();
   initContactForm();
-  initAiAssistant();
+  initAudioPlayer();
   initReveal();
 
   document.querySelectorAll("[data-wa-generic]").forEach((el) => (el.href = waLink()));
