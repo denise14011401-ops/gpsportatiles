@@ -416,17 +416,20 @@ function initProductDetail() {
     galleryMain.removeAttribute("tabindex");
     galleryMain.removeAttribute("aria-pressed");
     galleryMain.removeAttribute("aria-label");
-    galleryMain.innerHTML = `<span class="chip chip--shipping gallery-shipping-badge">Envío gratis</span><iframe src="${product.model3d}" title="Vista 3D interactiva de ${product.nombre} — arrastra para girar, rueda o pellizco para acercar" loading="lazy"></iframe><button class="gallery-3d-lock" type="button" data-gallery-lock aria-label="Toca para desbloquear y mover el GPS"><span class="gallery-3d-lock-badge"><svg aria-hidden="true" focusable="false"><use href="#icon-lock"></use></svg><span>Toca para desbloquear y mover el GPS</span></span></button><button class="gallery-3d-relock" type="button" data-gallery-relock aria-label="Bloquear el desplazamiento del 3D"></button>`;
-    const lockBtn = galleryMain.querySelector("[data-gallery-lock]");
-    const relockBtn = galleryMain.querySelector("[data-gallery-relock]");
-    if (relockBtn) {
-      relockBtn.addEventListener("click", () => {
-        galleryMain.classList.remove("is-unlocked");
+    galleryMain.innerHTML = `<span class="chip chip--shipping gallery-shipping-badge">Envío gratis</span><iframe src="${product.model3d}" title="Vista 3D de ${product.nombre}" loading="lazy"></iframe>`;
+    const activate360Btn = document.querySelector("[data-activate-360]");
+    if (activate360Btn) {
+      activate360Btn.hidden = false;
+      const viewer360 = document.querySelector("[data-viewer-360]");
+      const viewer360Frame = viewer360.querySelector("[data-viewer-360-frame]");
+      const viewer360Close = viewer360.querySelector("[data-viewer-360-close]");
+      activate360Btn.addEventListener("click", () => {
+        viewer360Frame.src = product.model3d;
+        viewer360.hidden = false;
       });
-    }
-    if (lockBtn) {
-      lockBtn.addEventListener("click", () => {
-        galleryMain.classList.add("is-unlocked");
+      viewer360Close.addEventListener("click", () => {
+        viewer360.hidden = true;
+        viewer360Frame.src = "";
       });
     }
   } else {
@@ -453,7 +456,6 @@ function initProductDetail() {
 
   const mockupVideo = document.querySelector("[data-mockup-video]");
   if (mockupVideo && product.id === "rastreador-mini-tag") {
-    mockupVideo.querySelector("[data-mockup-video-src]").src = "assets/images/app-mockups/mockup-video.webp";
     mockupVideo.hidden = false;
   }
 
@@ -461,6 +463,13 @@ function initProductDetail() {
   if (quickfactsHeading && product.id === "rastreador-mini-tag") {
     quickfactsHeading.textContent = "¿Por qué elegir el TAG?";
     quickfactsHeading.hidden = false;
+  }
+
+  if (product.id === "rastreador-mini-tag") {
+    const howBlock = document.querySelector("[data-how-block]");
+    if (howBlock) howBlock.hidden = false;
+    const specsSection = document.querySelector("[data-specs-section]");
+    if (specsSection) specsSection.hidden = true;
   }
 
   const usesBlock = document.querySelector("[data-uses-block]");

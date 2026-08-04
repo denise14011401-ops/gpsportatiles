@@ -28,9 +28,9 @@ const PRODUCTS = [
     imagen: "personal",
     model3d: "assets/3d/gps-personal.html",
     resenas: [
-      { nombre: "Elizabeth Cruz", ciudad: "Santiago, RD", foto: "assets/images/reviews/reviewer-1-avatar.jpg", rating: 5, texto: "Se lo puse a mi mamá en la cartera y la app me marca su ubicación clarito. Fácil de configurar, ya venía con el chip." },
-      { nombre: "Manuel Batista", ciudad: "Moca, RD", foto: "assets/images/reviews/reviewer-2-avatar.jpg", rating: 5, texto: "Buena batería, me dura varios días sin tener que estar cargándolo todos los días." },
-      { nombre: "Carolina Núñez", ciudad: "Santo Domingo, RD", foto: "assets/images/reviews/reviewer-3-avatar.jpg", rating: 4, texto: "Funciona bien, solo hay que estar pendiente del plan para que no se quede sin servicio." },
+      { nombre: "Ramón Peña", ciudad: "Santiago, RD", foto: "assets/images/reviews/personal-mini-1.jpg", rating: 5, texto: "Me cabe en la palma de la mano, literal. Se lo puse a mi papá en la cartera y no ha vuelto a perderse." },
+      { nombre: "Yolanda Ferreira", ciudad: "Moca, RD", foto: "assets/images/reviews/personal-mini-2.jpg", rating: 5, texto: "La cajita se ve bien presentada, como de marca de verdad. Llegó todo completo y fácil de configurar." },
+      { nombre: "Katherine Reyes", ciudad: "La Vega, RD", foto: "assets/images/reviews/personal-mini-3.jpg", rating: 4, texto: "Se lo metí a la mochila de mi hija para el colegio, bien chiquito y no se nota para nada." },
     ],
     bullets: [
       "Ubicación en tiempo real vía red 4G LTE",
@@ -79,6 +79,11 @@ const PRODUCTS = [
     bateriaDias: "Sin recargas — se alimenta del vehículo (respaldo interno de hasta 30 min si se desconecta)",
     imagen: "vehicular",
     model3d: "assets/3d/gps-obd2.html",
+    resenas: [
+      { nombre: "Luis Almonte", ciudad: "Santo Domingo, RD", foto: "assets/images/reviews/vehicular-obd2-1.jpg", rating: 5, texto: "SAFETAG en la caja, se ve serio. Lo conecté yo mismo al OBD en cinco minutos." },
+      { nombre: "Pedro Julio Vargas", ciudad: "San Cristóbal, RD", foto: "assets/images/reviews/vehicular-obd2-2.jpg", rating: 5, texto: "Bien pequeño para lo que promete, no se nota para nada desde afuera del carro." },
+      { nombre: "Anderson De la Cruz", ciudad: "Bonao, RD", foto: "assets/images/reviews/vehicular-obd2-3.jpg", rating: 4, texto: "Lo instalé en dos camionetas del negocio, el número de serie viene bien marcado para no confundir cuál es cuál." },
+    ],
     bullets: [
       "Se conecta directo al puerto OBD-II, sin cables",
       "Se alimenta del vehículo, sin recargas manuales",
@@ -144,11 +149,6 @@ const PRODUCTS = [
       { nombre: "Elizabeth Cruz", ciudad: "Santiago, RD", foto: "assets/images/reviews/reviewer-1-avatar.jpg", rating: 5, texto: "Jajaja, bueno... ojalá que mi esposo no me esté ocultando nada. Quedó súper bien escondido debajo del asiento del vehículo." },
       { nombre: "Carolina Núñez", ciudad: "Santo Domingo, RD", foto: "assets/images/reviews/reviewer-3-avatar.jpg", rating: 5, texto: "Compré varios para mis hijos y mis mascotas. Funcionan de maravilla, la aplicación es muy fácil de usar y ahora me siento mucho más tranquila porque sé dónde están todos." },
     ],
-    resenas: [
-      { nombre: "Elizabeth Cruz", ciudad: "Santiago, RD", foto: "assets/images/reviews/reviewer-1-avatar.jpg", rating: 5, texto: "Se lo instalé yo mismo al carro en 5 minutos, ni tuve que llevarlo a un taller." },
-      { nombre: "Manuel Batista", ciudad: "Moca, RD", foto: "assets/images/reviews/reviewer-2-avatar.jpg", rating: 5, texto: "Lo tengo escondido debajo del timón, nadie lo nota y me manda la ubicación al momento." },
-      { nombre: "Carolina Núñez", ciudad: "Santo Domingo, RD", foto: "assets/images/reviews/reviewer-3-avatar.jpg", rating: 5, texto: "Se alimenta del carro, no hay que estarlo cargando como otros que he tenido antes." },
-    ],
     bullets: [
       "Hasta 3 años de batería, sin recargas",
       "No requiere tarjeta SIM ni pagos mensuales",
@@ -198,19 +198,9 @@ const PRODUCTS = [
     imagen: "objeto",
     model3d: "assets/3d/gps-cargador.html",
     resenas: [
-      { nombre: "Elizabeth Cruz", ciudad: "Santiago, RD", foto: "assets/images/reviews/reviewer-1-avatar.jpg", rating: 5, texto: "Se conecta directo al encendedor del carro, súper simple de usar." },
-      { nombre: "Manuel Batista", ciudad: "Moca, RD", foto: "assets/images/reviews/reviewer-2-avatar.jpg", rating: 5, texto: "Le di clic al botón SOS de prueba y llegó la alerta al momento, se siente confiable." },
-      { nombre: "Carolina Núñez", ciudad: "Santo Domingo, RD", foto: "assets/images/reviews/reviewer-3-avatar.jpg", rating: 5, texto: "Práctico para la moto también, no necesita instalación complicada." },
-    ],
-    resenas: [
-      { nombre: "Elizabeth Cruz", ciudad: "Santiago, RD", foto: "assets/images/reviews/reviewer-1-avatar.jpg", rating: 5, texto: "Lo uso para controlar las camionetas del negocio, el panel web es fácil de manejar." },
-      { nombre: "Manuel Batista", ciudad: "Moca, RD", foto: "assets/images/reviews/reviewer-2-avatar.jpg", rating: 4, texto: "Funciona bien para varias unidades a la vez, aunque la primera configuración toma su tiempo." },
-      { nombre: "Carolina Núñez", ciudad: "Santo Domingo, RD", foto: "assets/images/reviews/reviewer-3-avatar.jpg", rating: 5, texto: "Nos ayudó a organizar mejor las rutas de entrega de la empresa." },
-    ],
-    resenas: [
-      { nombre: "Elizabeth Cruz", ciudad: "Santiago, RD", foto: "assets/images/reviews/reviewer-1-avatar.jpg", rating: 5, texto: "Se lo puse a la moto de mi esposo y quedamos tranquilos cuando la deja parqueada en la calle." },
-      { nombre: "Manuel Batista", ciudad: "Moca, RD", foto: "assets/images/reviews/reviewer-2-avatar.jpg", rating: 5, texto: "Resistente, le ha caído agua y sigue funcionando sin problema." },
-      { nombre: "Carolina Núñez", ciudad: "Santo Domingo, RD", foto: "assets/images/reviews/reviewer-3-avatar.jpg", rating: 5, texto: "Las alertas de movimiento llegan rápido al celular, muy útil." },
+      { nombre: "Massiel Guzmán", ciudad: "Puerto Plata, RD", foto: "assets/images/reviews/valuetrack-1.jpg", rating: 5, texto: "Está metido en el encendedor de mi carro y de verdad parece un cargador cualquiera." },
+      { nombre: "Wilson Tavárez", ciudad: "Higüey, RD", foto: "assets/images/reviews/valuetrack-2.jpg", rating: 5, texto: "Llegó bien empacado, se nota que le pusieron cuidado a la caja." },
+      { nombre: "Rosa Iris Familia", ciudad: "San Francisco de Macorís, RD", foto: "assets/images/reviews/valuetrack-3.jpg", rating: 4, texto: "Me gustó que además de rastrear tiene el puerto USB, así no pierdo espacio en el carro." },
     ],
     bullets: [
       "Se conecta directo a la toma de 12V, sin instalación",
@@ -259,6 +249,11 @@ const PRODUCTS = [
     bateriaDias: "Batería de 5,000 mAh: hasta 20 días de uso continuo, más de 90 días en reposo",
     imagen: "vehicular",
     model3d: "assets/3d/gps-cuadrado.html",
+    resenas: [
+      { nombre: "Estefany Contreras", ciudad: "Barahona, RD", foto: "assets/images/reviews/mini-magnetico-1.jpg", rating: 5, texto: "Todavía en la caja se ve resistente, nada plástico ni barato." },
+      { nombre: "Freddy Encarnación", ciudad: "Baní, RD", foto: "assets/images/reviews/mini-magnetico-2.jpg", rating: 5, texto: "Lo tengo desde hace semanas pegado y el imán no ha soltado para nada." },
+      { nombre: "Yajaira Polanco", ciudad: "Nagua, RD", foto: "assets/images/reviews/mini-magnetico-3.jpg", rating: 4, texto: "Se lo puse a la camioneta de reparto del negocio, bien discreto por dentro del guardabarros." },
+    ],
     metaDescripcion: "GPS magnético 4G con batería de 5,000 mAh, hasta 20 días de uso continuo. Rastreo en tiempo real y alertas por WhatsApp. Envío gratis en RD.",
     bullets: [
       "Base magnética potente, se instala en segundos",
@@ -290,11 +285,6 @@ const PRODUCTS = [
       { p: "¿Tengo que pagar todos los meses?", r: "No — el precio incluye 1 año completo de servicio. Después, la renovación anual es de solo RD$1,990." },
       { p: "¿Cómo se instala?", r: "Se coloca con su base magnética en un lugar oculto del vehículo, en segundos y sin herramientas." },
     ],
-    resenas: [
-      { nombre: "Elizabeth Cruz", ciudad: "Santiago, RD", foto: "assets/images/reviews/reviewer-1-avatar.jpg", rating: 5, texto: "Se pega bien fuerte, lo puse debajo del carro y ahí sigue después de varias semanas manejando por toda clase de calle." },
-      { nombre: "Manuel Batista", ciudad: "Moca, RD", foto: "assets/images/reviews/reviewer-2-avatar.jpg", rating: 5, texto: "La batería de verdad dura, ya tiene como dos semanas sin cargarlo y sigue reportando normal." },
-      { nombre: "Carolina Núñez", ciudad: "Santo Domingo, RD", foto: "assets/images/reviews/reviewer-3-avatar.jpg", rating: 4, texto: "Funciona bien, me gustó que ya venga con SIM y todo listo. Lo único es que hay que estar pendiente de la renovación del año." },
-    ],
   },
   {
     id: "gps-super-magnetico",
@@ -312,6 +302,11 @@ const PRODUCTS = [
     bateriaDias: "Batería de 10,000 mAh: hasta 35 días de uso continuo, más de 90 días en reposo",
     imagen: "vehicular",
     model3d: "assets/3d/gps-cuadrado-pro.html",
+    resenas: [
+      { nombre: "Héctor Manuel Rosario", ciudad: "Azua, RD", foto: "assets/images/reviews/super-magnetico-1.jpg", rating: 5, texto: "El PRO se nota más grande y más serio que el otro que tenía antes, vale la pena la diferencia." },
+      { nombre: "Scarlet Abreu", ciudad: "Cotuí, RD", foto: "assets/images/reviews/super-magnetico-2.jpg", rating: 5, texto: "Se ve bien resistente, como para aguantar golpes y agua sin problema." },
+      { nombre: "Josué Ureña", ciudad: "Constanza, RD", foto: "assets/images/reviews/super-magnetico-3.jpg", rating: 5, texto: "Los imanes son una barbaridad de fuertes, lo pegué al chasis del camión y no se mueve ni con bache." },
+    ],
     metaDescripcion: "GPS súper magnético 4G con batería de 10,000 mAh, hasta 35 días de uso continuo. Imán extra fuerte y alertas por WhatsApp. Envío gratis en RD.",
     bullets: [
       "Imán extra fuerte, se instala en segundos",
@@ -344,11 +339,6 @@ const PRODUCTS = [
       { p: "¿En qué se diferencia del GPS Mini+ Magnético?", r: "Tiene un imán más fuerte y una batería más grande (10,000 mAh vs. 5,000 mAh), con más días de uso continuo." },
       { p: "¿Tengo que pagar todos los meses?", r: "No — el precio incluye 1 año completo de servicio. Después, la renovación anual es de solo RD$1,990." },
     ],
-    resenas: [
-      { nombre: "Elizabeth Cruz", ciudad: "Santiago, RD", foto: "assets/images/reviews/reviewer-1-avatar.jpg", rating: 5, texto: "Este es más grande que el otro que había comprado antes, pero el imán agarra muchísimo mejor, no se despega ni en carretera." },
-      { nombre: "Manuel Batista", ciudad: "Moca, RD", foto: "assets/images/reviews/reviewer-2-avatar.jpg", rating: 5, texto: "La batería aguanta un montón, lo cargué una vez y ya llevo semanas sin volver a tocarlo." },
-      { nombre: "Carolina Núñez", ciudad: "Santo Domingo, RD", foto: "assets/images/reviews/reviewer-3-avatar.jpg", rating: 4, texto: "Bueno para el camión de la empresa, pesa un poco más que uno chiquito pero para eso es, para quedarse fijo." },
-    ],
   },
   {
     id: "salind-11-4g",
@@ -366,6 +356,11 @@ const PRODUCTS = [
     bateriaDias: "Batería de 7,500 mAh: hasta 40 días con uso activo (~1 h/día), hasta 70 días en reposo",
     imagen: "vehicular",
     model3d: "assets/3d/salind-11-4g.html",
+    resenas: [
+      { nombre: "Miguelina Disla", ciudad: "Jarabacoa, RD", foto: "assets/images/reviews/salind-11-1.jpg", rating: 5, texto: "Me lo mandaron rapidito y se ve bien terminado, nada de plástico flojo." },
+      { nombre: "Franklin Rosario", ciudad: "Villa Altagracia, RD", foto: "assets/images/reviews/salind-11-2.jpg", rating: 4, texto: "El logo de Salind se ve grabado de verdad, no pegado como sticker." },
+      { nombre: "Ana Belkis Checo", ciudad: "Bávaro, RD", foto: "assets/images/reviews/salind-11-3.jpg", rating: 5, texto: "Lo tengo pegado abajo del carro hace un mes y ahí sigue, ni con lluvia se ha caído." },
+    ],
     metaDescripcion: "SALIND 11 GPS 4G magnético, resistente al agua, para autos y flotas. Batería de 7,500 mAh, hasta 70 días en reposo. Requiere suscripción de datos.",
     bullets: [
       "Imanes súper fuertes, se fija en segundos",
@@ -397,11 +392,6 @@ const PRODUCTS = [
       { p: "¿Necesito pagar una suscripción?", r: "Sí, el dispositivo ya trae la SIM integrada, pero necesita un plan de rastreo activo (desde planes básicos) para reportar ubicación." },
       { p: "¿Sirve para botes?", r: "Sí, gracias a que es resistente al agua y se fija con imanes, funciona bien en botes además de autos y flotas." },
     ],
-    resenas: [
-      { nombre: "Elizabeth Cruz", ciudad: "Santiago, RD", foto: "assets/images/reviews/reviewer-1-avatar.jpg", rating: 5, texto: "Lo probé en el bote de mi papá y ahí sigue pegado, resiste bien el agua y el sol." },
-      { nombre: "Manuel Batista", ciudad: "Moca, RD", foto: "assets/images/reviews/reviewer-2-avatar.jpg", rating: 4, texto: "El imán agarra fuerte de verdad. Lo único es que hay que estar pendiente del plan para que no se quede sin reportar." },
-      { nombre: "Carolina Núñez", ciudad: "Santo Domingo, RD", foto: "assets/images/reviews/reviewer-3-avatar.jpg", rating: 5, texto: "La batería aguanta bastante en reposo, no he tenido que cargarlo seguido." },
-    ],
   },
   {
     id: "seeworld-p2",
@@ -419,6 +409,11 @@ const PRODUCTS = [
     bateriaDias: "Batería de 800 mAh: hasta 10 días de uso",
     imagen: "mascota",
     model3d: "assets/3d/seeworld-p2.html",
+    resenas: [
+      { nombre: "Rafael Antonio Mejía", ciudad: "Sabana Grande de Boyá, RD", foto: "assets/images/reviews/seeworld-p2-1.jpg", rating: 5, texto: "Lo compré para mi perro y en la caja sale bien explicado todo lo que hace, hasta lo de la salud." },
+      { nombre: "Yesenia Paulino", ciudad: "San Pedro de Macorís, RD", foto: "assets/images/reviews/seeworld-p2-2.jpg", rating: 5, texto: "Bien chiquito y liviano, mi gato ni se dio cuenta que lo tenía puesto." },
+      { nombre: "Elvin Payano", ciudad: "Santiago, RD", foto: "assets/images/reviews/seeworld-p2-3.jpg", rating: 4, texto: "Llegó bien empacado en su cajita azul, se nota que es de marca reconocida." },
+    ],
     metaDescripcion: "SEEWORLD P2, GPS para perros y gatos con monitoreo de salud (sueño, actividad, calorías). Resistente al agua IP67, batería de 10 días. Envío gratis en RD.",
     bullets: [
       "Monitoreo de salud: sueño, actividad y calorías",
@@ -449,11 +444,6 @@ const PRODUCTS = [
     faqs: [
       { p: "¿Necesito pagar una suscripción?", r: "Sí, este modelo requiere una suscripción mensual aparte a la aplicación COOLPET para funcionar." },
       { p: "¿Sirve para mascotas pequeñas?", r: "Está pensado para perros y gatos de más de 4 kg; en mascotas más chicas puede resultar algo grande o pesado." },
-    ],
-    resenas: [
-      { nombre: "Elizabeth Cruz", ciudad: "Santiago, RD", foto: "assets/images/reviews/reviewer-1-avatar.jpg", rating: 5, texto: "Me gusta que además de la ubicación me dice cuánto durmió y qué tan activo estuvo mi perro en el día." },
-      { nombre: "Manuel Batista", ciudad: "Moca, RD", foto: "assets/images/reviews/reviewer-2-avatar.jpg", rating: 4, texto: "Funciona bien, aunque hay que estar pendiente de pagar la app aparte todos los meses." },
-      { nombre: "Carolina Núñez", ciudad: "Santo Domingo, RD", foto: "assets/images/reviews/reviewer-3-avatar.jpg", rating: 5, texto: "Se lo puse a mi gato y resistió bien cuando se mojó jugando afuera, sigue funcionando normal." },
     ],
   },
 ];
