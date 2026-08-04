@@ -535,7 +535,7 @@ function initProductDetail() {
   document.querySelector("[data-ideal-para]").textContent = product.idealPara;
 
   document.querySelector("[data-product-faqs]").innerHTML = product.faqs
-    .map((f) => `<div class="pdp-faq-item"><h3>${f.p}</h3><p>${f.r}</p></div>`)
+    .map((f) => `<div class="pdp-faq-item"><h3${f.destacada ? ' class="pdp-faq-question--accent"' : ""}>${f.p}</h3><p>${f.r}</p></div>`)
     .join("");
 
   const reviewsEl = document.querySelector("[data-product-reviews]");

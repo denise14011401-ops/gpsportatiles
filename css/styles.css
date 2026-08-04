@@ -733,6 +733,7 @@ html[data-theme="dark"] .theme-icon-moon { opacity: 1; transform: rotate(0deg) s
 
 .pdp-faq-plain { display: grid; gap: var(--sp-5); }
 .pdp-faq-item h3 { font-size: 0.93rem; margin-bottom: 6px; }
+.pdp-faq-question--accent { color: var(--blue-600); }
 .pdp-faq-item p { font-size: 0.88rem; color: var(--text-muted); line-height: 1.55; }
 
 

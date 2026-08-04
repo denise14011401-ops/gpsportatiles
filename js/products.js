@@ -180,7 +180,7 @@ const PRODUCTS = [
     faqs: [
       { p: "¿Necesito pagar una suscripción?", r: "No, este modelo no requiere tarjeta SIM ni pagos mensuales." },
       { p: "¿Cuánto dura la batería?", r: "Hasta 3 años según el uso, sin necesidad de recargarlo." },
-      { p: "¿Otros celulares pueden detectar mi TAG?", r: "El TAG se vincula de forma privada con tu cuenta para ofrecer una experiencia más segura y discreta." },
+      { p: "¿Otros celulares pueden detectar mi TAG?", r: "El TAG se vincula de forma privada con tu cuenta para ofrecer una experiencia más segura y discreta.", destacada: true },
     ],
   },
   {
