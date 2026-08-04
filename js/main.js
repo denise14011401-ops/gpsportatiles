@@ -1360,7 +1360,7 @@ function initCardModels() {
     if (el.querySelector("iframe")) return;
     const src = el.dataset.model3d;
     const frame = document.createElement("iframe");
-    frame.src = `${src}?static=1`;
+    frame.src = src + (src.includes("?") ? "&static=1" : "?static=1");
     frame.loading = "lazy";
     frame.tabIndex = -1;
     frame.setAttribute("aria-hidden", "true");

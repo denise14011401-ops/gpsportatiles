@@ -26,7 +26,7 @@ const PRODUCTS = [
     disponibilidadTexto: "Pocas unidades",
     bateriaDias: "Hasta 5 días con uso diario (aprox. 1 hora activa al día)",
     imagen: "personal",
-    model3d: "assets/3d/gps-personal.html",
+    model3d: "assets/3d/gps-personal.html?v=2",
     resenas: [
       { nombre: "Ramón Peña", ciudad: "Santiago, RD", foto: "assets/images/reviews/personal-mini-1.jpg", rating: 5, texto: "Me cabe en la palma de la mano, literal. Se lo puse a mi papá en la cartera y no ha vuelto a perderse." },
       { nombre: "Yolanda Ferreira", ciudad: "Moca, RD", foto: "assets/images/reviews/personal-mini-2.jpg", rating: 5, texto: "La cajita se ve bien presentada, como de marca de verdad. Llegó todo completo y fácil de configurar." },
@@ -78,7 +78,7 @@ const PRODUCTS = [
     disponibilidadTexto: "Pocas unidades",
     bateriaDias: "Sin recargas — se alimenta del vehículo (respaldo interno de hasta 30 min si se desconecta)",
     imagen: "vehicular",
-    model3d: "assets/3d/gps-obd2.html",
+    model3d: "assets/3d/gps-obd2.html?v=2",
     resenas: [
       { nombre: "Luis Almonte", ciudad: "Santo Domingo, RD", foto: "assets/images/reviews/vehicular-obd2-1.jpg", rating: 5, texto: "SAFETAG en la caja, se ve serio. Lo conecté yo mismo al OBD en cinco minutos." },
       { nombre: "Pedro Julio Vargas", ciudad: "San Cristóbal, RD", foto: "assets/images/reviews/vehicular-obd2-2.jpg", rating: 5, texto: "Bien pequeño para lo que promete, no se nota para nada desde afuera del carro." },
@@ -143,7 +143,7 @@ const PRODUCTS = [
     disponibilidadTexto: "Pocas unidades",
     bateriaDias: "Hasta 3 años de batería, sin recargas",
     imagen: "mascota",
-    model3d: "assets/3d/gps-redondo.html",
+    model3d: "assets/3d/gps-redondo.html?v=2",
     resenas: [
       { nombre: "Manuel Batista", ciudad: "Moca, RD", foto: "assets/images/reviews/reviewer-2-avatar.jpg", rating: 5, texto: "Pensé que era más grande, pero me sorprendió. ¡Es súper pequeño! Ideal para lo que lo quería." },
       { nombre: "Elizabeth Cruz", ciudad: "Santiago, RD", foto: "assets/images/reviews/reviewer-1-avatar.jpg", rating: 5, texto: "Jajaja, bueno... ojalá que mi esposo no me esté ocultando nada. Quedó súper bien escondido debajo del asiento del vehículo." },
@@ -167,7 +167,7 @@ const PRODUCTS = [
       "Discreto, no es detectado por los escáneres de rastreadores de los celulares",
     ],
     compatibilidad: "Compatible con app móvil para iOS y Android. No requiere SIM ni plan de datos.",
-    cobertura: "Cobertura limitada por tratarse de un dispositivo magnético y extra pequeño.",
+    cobertura: "Dispositivo magnético y extra pequeño",
     red: "Conectividad internacional propia (sin SIM ni datos móviles)",
     peso: "38 g",
     dimensiones: "4.5 × 3.2 × 1.6 cm",
@@ -196,7 +196,7 @@ const PRODUCTS = [
     disponibilidadTexto: "Pocas unidades",
     bateriaDias: "Batería de respaldo de 30 min si se desconecta de la toma de 12V",
     imagen: "objeto",
-    model3d: "assets/3d/gps-cargador.html",
+    model3d: "assets/3d/gps-cargador.html?v=2",
     resenas: [
       { nombre: "Massiel Guzmán", ciudad: "Puerto Plata, RD", foto: "assets/images/reviews/valuetrack-1.jpg", rating: 5, texto: "Está metido en el encendedor de mi carro y de verdad parece un cargador cualquiera." },
       { nombre: "Wilson Tavárez", ciudad: "Higüey, RD", foto: "assets/images/reviews/valuetrack-2.jpg", rating: 5, texto: "Llegó bien empacado, se nota que le pusieron cuidado a la caja." },
@@ -248,7 +248,7 @@ const PRODUCTS = [
     disponibilidadTexto: "Pocas unidades",
     bateriaDias: "Batería de 5,000 mAh: hasta 20 días de uso continuo, más de 90 días en reposo",
     imagen: "vehicular",
-    model3d: "assets/3d/gps-cuadrado.html",
+    model3d: "assets/3d/gps-cuadrado.html?v=2",
     resenas: [
       { nombre: "Estefany Contreras", ciudad: "Barahona, RD", foto: "assets/images/reviews/mini-magnetico-1.jpg", rating: 5, texto: "Todavía en la caja se ve resistente, nada plástico ni barato." },
       { nombre: "Freddy Encarnación", ciudad: "Baní, RD", foto: "assets/images/reviews/mini-magnetico-2.jpg", rating: 5, texto: "Lo tengo desde hace semanas pegado y el imán no ha soltado para nada." },
@@ -301,7 +301,7 @@ const PRODUCTS = [
     disponibilidadTexto: "Pocas unidades",
     bateriaDias: "Batería de 10,000 mAh: hasta 35 días de uso continuo, más de 90 días en reposo",
     imagen: "vehicular",
-    model3d: "assets/3d/gps-cuadrado-pro.html",
+    model3d: "assets/3d/gps-cuadrado-pro.html?v=2",
     resenas: [
       { nombre: "Héctor Manuel Rosario", ciudad: "Azua, RD", foto: "assets/images/reviews/super-magnetico-1.jpg", rating: 5, texto: "El PRO se nota más grande y más serio que el otro que tenía antes, vale la pena la diferencia." },
       { nombre: "Scarlet Abreu", ciudad: "Cotuí, RD", foto: "assets/images/reviews/super-magnetico-2.jpg", rating: 5, texto: "Se ve bien resistente, como para aguantar golpes y agua sin problema." },
@@ -355,7 +355,7 @@ const PRODUCTS = [
     disponibilidadTexto: "Pocas unidades",
     bateriaDias: "Batería de 7,500 mAh: hasta 40 días con uso activo (~1 h/día), hasta 70 días en reposo",
     imagen: "vehicular",
-    model3d: "assets/3d/salind-11-4g.html",
+    model3d: "assets/3d/salind-11-4g.html?v=2",
     resenas: [
       { nombre: "Miguelina Disla", ciudad: "Jarabacoa, RD", foto: "assets/images/reviews/salind-11-1.jpg", rating: 5, texto: "Me lo mandaron rapidito y se ve bien terminado, nada de plástico flojo." },
       { nombre: "Franklin Rosario", ciudad: "Villa Altagracia, RD", foto: "assets/images/reviews/salind-11-2.jpg", rating: 4, texto: "El logo de Salind se ve grabado de verdad, no pegado como sticker." },
@@ -408,7 +408,7 @@ const PRODUCTS = [
     disponibilidadTexto: "Pocas unidades",
     bateriaDias: "Batería de 800 mAh: hasta 10 días de uso",
     imagen: "mascota",
-    model3d: "assets/3d/seeworld-p2.html",
+    model3d: "assets/3d/seeworld-p2.html?v=2",
     resenas: [
       { nombre: "Rafael Antonio Mejía", ciudad: "Sabana Grande de Boyá, RD", foto: "assets/images/reviews/seeworld-p2-1.jpg", rating: 5, texto: "Lo compré para mi perro y en la caja sale bien explicado todo lo que hace, hasta lo de la salud." },
       { nombre: "Yesenia Paulino", ciudad: "San Pedro de Macorís, RD", foto: "assets/images/reviews/seeworld-p2-2.jpg", rating: 5, texto: "Bien chiquito y liviano, mi gato ni se dio cuenta que lo tenía puesto." },
