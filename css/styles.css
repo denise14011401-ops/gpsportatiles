@@ -892,10 +892,12 @@ html[data-theme="dark"] .theme-icon-moon { opacity: 1; transform: rotate(0deg) s
 }
 
 @media (max-width: 720px) {
-  .container { padding: 0 var(--sp-5); }
+  .container { padding: 0 14px; }
+  .header-inner { gap: 8px; }
+  .brand { gap: 8px; }
   .brand-icon { height: 42px; }
   .brand-name { font-size: 1.3rem; }
-  .header-actions { gap: 6px; }
+  .header-actions { gap: 4px; }
   .header-actions a.icon-btn[href^="tel:"] { display: none; }
   .main-nav-call {
     display: flex; align-items: center; gap: 10px; padding: 11px 13px; margin-top: 4px;
