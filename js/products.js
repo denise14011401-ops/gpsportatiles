@@ -134,6 +134,7 @@ const PRODUCTS = [
       { svg: '<circle cx="12" cy="12" r="10" fill="#29A9EB"/><path fill="#fff" d="M17.7 7.2 15.9 17c-.13.6-.5.75-1 .47l-2.77-2.04-1.34 1.29c-.15.15-.27.27-.56.27l.2-2.83 5.16-4.66c.22-.2-.05-.31-.35-.11l-6.38 4.02-2.75-.86c-.6-.19-.6-.6.13-.89l10.75-4.14c.5-.18.94.12.78.9Z"/>', label: "Bot de Telegram" },
       { svg: '<path d="M12 2a7 7 0 00-7 7c0 5.25 7 13 7 13s7-7.75 7-13a7 7 0 00-7-7Z" fill="#EF4444"/><circle cx="12" cy="9" r="2.6" fill="#fff"/>', label: "Ubicación compartida sin límites" },
       { svg: '<circle cx="12" cy="12" r="10" fill="#F59E0B"/><path d="M12 6a4.5 4.5 0 00-4.5 4.5c0 3.6-1.5 4.3-1.5 5h12s-1.5-.7-1.5-5A4.5 4.5 0 0012 6z" fill="none" stroke="#fff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M10.5 17.5a1.5 1.5 0 003 0" fill="none" stroke="#fff" stroke-width="1.5" stroke-linecap="round"/>', label: "Alertas salidas de zonas" },
+      { svg: '<circle cx="12" cy="12" r="10" fill="#4C7DFF"/><path d="M12 6.5c-2 1.3-3.3 1.6-5 1.6V13c0 3.2 2.1 5.6 5 6.5 2.9-.9 5-3.3 5-6.5V8.1c-1.7 0-3-.3-5-1.6z" fill="#fff"/>', label: "Conexión totalmente discreta" },
     ],
     precio: 2490,
     precioAnterior: null,
@@ -179,6 +180,7 @@ const PRODUCTS = [
     faqs: [
       { p: "¿Necesito pagar una suscripción?", r: "No, este modelo no requiere tarjeta SIM ni pagos mensuales." },
       { p: "¿Cuánto dura la batería?", r: "Hasta 3 años según el uso, sin necesidad de recargarlo." },
+      { p: "¿Otros celulares pueden detectar mi TAG?", r: "El TAG se vincula de forma privada con tu cuenta para ofrecer una experiencia más segura y discreta." },
     ],
   },
   {
