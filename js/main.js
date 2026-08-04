@@ -500,8 +500,6 @@ function initProductDetail() {
     usesToggle.addEventListener("click", () => usesImg.click());
   }
 
-  initPhotoLightbox(document);
-
   document.querySelector("[data-fact-red]").textContent = product.red;
   document.querySelector("[data-fact-bateria]").textContent = product.bateriaDias;
   document.querySelector("[data-fact-cobertura]").textContent = product.cobertura;
@@ -555,6 +553,8 @@ function initProductDetail() {
       )
       .join("");
   }
+
+  initPhotoLightbox(document);
 
   initOrderModal(product);
 
