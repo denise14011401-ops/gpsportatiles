@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>¿Cómo funciona el TAG?</title>
+  <!-- Tailwind CSS CDN (para fácil integración) -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = { darkMode: 'class' };
+  </script>
+  <!-- Iconos Lucide -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <style>
+    html, body { background: transparent; }
+    /* Estilos personalizados para efectos sutiles */
+    .pulse-effect {
+      box-shadow: 0 0 0 0 rgba(250, 30, 78, 0.4);
+      animation: pulse 2s infinite;
+    }
+    @keyframes pulse {
+      0% { box-shadow: 0 0 0 0 rgba(250, 30, 78, 0.4); }
+      70% { box-shadow: 0 0 0 15px rgba(250, 30, 78, 0); }
+      100% { box-shadow: 0 0 0 0 rgba(250, 30, 78, 0); }
+    }
+  </style>
+</head>
+<body class="bg-gray-50 dark:bg-transparent text-gray-800 dark:text-gray-100 font-sans">
+
+  <!-- SECCIÓN PRINCIPAL: MINI TAG -->
+  <section class="max-w-6xl mx-auto my-0 p-6 md:p-10 bg-white dark:bg-white/5 rounded-3xl shadow-xl border border-gray-100 dark:border-white/10">
+
+    <!-- ENCABEZADO -->
+    <div class="text-center max-w-3xl mx-auto mb-12">
+      <h2 class="text-4xl md:text-5xl font-extrabold text-gray-900 dark:text-white tracking-tight">
+        ¿CÓMO <span class="text-[#FA1E4E]">FUNCIONA?</span>
+      </h2>
+      <p class="mt-4 text-lg text-gray-600 dark:text-gray-400 leading-relaxed">
+        El <strong>Mini TAG</strong> no usa GPS ni tarjeta SIM. Se conecta de forma inteligente a celulares Android e iPhone cercanos para mostrar su ubicación exacta en la app.
+      </p>
+
+      <!-- BADGES RÁPIDOS DE CARACTERÍSTICAS -->
+      <div class="flex flex-wrap justify-center gap-3 mt-6">
+        <span class="inline-flex items-center px-4 py-2 rounded-full text-xs font-semibold bg-[#FA1E4E]/10 text-[#FA1E4E] border border-[#FA1E4E]/20">
+          <i data-lucide="sim-card-off" class="w-4 h-4 mr-1.5"></i> No requiere SIM
+        </span>
+        <span class="inline-flex items-center px-4 py-2 rounded-full text-xs font-semibold bg-[#FA1E4E]/10 text-[#FA1E4E] border border-[#FA1E4E]/20">
+          <i data-lucide="navigation-off" class="w-4 h-4 mr-1.5"></i> No usa GPS
+        </span>
+        <span class="inline-flex items-center px-4 py-2 rounded-full text-xs font-semibold bg-[#FA1E4E]/10 text-[#FA1E4E] border border-[#FA1E4E]/20">
+          <i data-lucide="battery-charging" class="w-4 h-4 mr-1.5"></i> Batería de hasta 3 años
+        </span>
+      </div>
+    </div>
+
+    <!-- PASOS DE FUNCIONAMIENTO (1 AL 4) -->
+    <div class="grid grid-cols-1 sm:grid-cols-4 gap-6 relative mb-12">
+
+      <!-- Paso 1 -->
+      <div class="bg-gray-50 dark:bg-white/5 rounded-2xl p-5 border border-gray-100 dark:border-white/10 flex flex-col items-center text-center relative group hover:shadow-md transition">
+        <div class="absolute -top-3 left-4 bg-[#FA1E4E] text-white font-bold rounded-full w-7 h-7 flex items-center justify-center text-sm shadow">1</div>
+        <div class="w-24 h-24 my-4 flex items-center justify-center">
+          <!-- Renderizado CSS del Mini TAG Redondo -->
+          <div class="w-20 h-20 rounded-full bg-neutral-900 border-4 border-neutral-800 pulse-effect flex items-center justify-center shadow-lg relative">
+            <div class="w-14 h-14 rounded-full border border-neutral-700 flex flex-col items-center justify-center text-white">
+              <i data-lucide="map-pin" class="w-5 h-5 text-[#FA1E4E] fill-[#FA1E4E]"></i>
+              <span class="text-[8px] font-black tracking-widest mt-0.5">MINI TAG</span>
+            </div>
+          </div>
+        </div>
+        <h3 class="font-bold text-gray-900 dark:text-white mb-1">El TAG envía su señal</h3>
+        <p class="text-xs text-gray-500 dark:text-gray-400">El dispositivo emite una señal Bluetooth de bajo consumo constantemente.</p>
+      </div>
+
+      <!-- Paso 2 -->
+      <div class="bg-gray-50 dark:bg-white/5 rounded-2xl p-5 border border-gray-100 dark:border-white/10 flex flex-col items-center text-center relative group hover:shadow-md transition">
+        <div class="absolute -top-3 left-4 bg-[#FA1E4E] text-white font-bold rounded-full w-7 h-7 flex items-center justify-center text-sm shadow">2</div>
+        <div class="w-24 h-24 my-4 flex items-center justify-center text-[#FA1E4E]">
+          <i data-lucide="smartphone" class="w-16 h-16 text-gray-800 dark:text-gray-200"></i>
+        </div>
+        <h3 class="font-bold text-gray-900 dark:text-white mb-1">Un celular cercano la detecta</h3>
+        <p class="text-xs text-gray-500 dark:text-gray-400">Cualquier celular Android o iPhone compatible que pase cerca recibe la señal de forma segura.</p>
+      </div>
+
+      <!-- Paso 3 -->
+      <div class="bg-gray-50 dark:bg-white/5 rounded-2xl p-5 border border-gray-100 dark:border-white/10 flex flex-col items-center text-center relative group hover:shadow-md transition">
+        <div class="absolute -top-3 left-4 bg-[#FA1E4E] text-white font-bold rounded-full w-7 h-7 flex items-center justify-center text-sm shadow">3</div>
+        <div class="w-24 h-24 my-4 flex items-center justify-center text-blue-500">
+          <i data-lucide="cloud-cog" class="w-16 h-16"></i>
+        </div>
+        <h3 class="font-bold text-gray-900 dark:text-white mb-1">Ubicación anónima a la nube</h3>
+        <p class="text-xs text-gray-500 dark:text-gray-400">El celular envía la ubicación aproximada del TAG a nuestros servidores (sin compartir datos personales).</p>
+      </div>
+
+      <!-- Paso 4 -->
+      <div class="bg-gray-50 dark:bg-white/5 rounded-2xl p-5 border border-gray-100 dark:border-white/10 flex flex-col items-center text-center relative group hover:shadow-md transition">
+        <div class="absolute -top-3 left-4 bg-[#FA1E4E] text-white font-bold rounded-full w-7 h-7 flex items-center justify-center text-sm shadow">4</div>
+        <div class="w-24 h-24 my-4 flex items-center justify-center text-gray-800 dark:text-gray-200">
+          <i data-lucide="map" class="w-16 h-16 text-[#FA1E4E]"></i>
+        </div>
+        <h3 class="font-bold text-gray-900 dark:text-white mb-1">Ves la ubicación en la app</h3>
+        <p class="text-xs text-gray-500 dark:text-gray-400">Abre la app y consulta la última ubicación disponible, historial de recorridos y alertas.</p>
+      </div>
+
+    </div>
+
+    <!-- NOTA DE ADVERTENCIA / ACLARACIÓN -->
+    <div class="bg-amber-50 dark:bg-amber-500/10 border-l-4 border-amber-500 p-4 rounded-r-xl mb-12 flex items-start gap-3">
+      <i data-lucide="info" class="w-6 h-6 text-amber-600 dark:text-amber-400 shrink-0 mt-0.5"></i>
+      <p class="text-xs md:text-sm text-amber-900 dark:text-amber-200">
+        <strong>Importante:</strong> La ubicación se actualiza cuando el TAG entra en contacto con celulares compatibles cercanos. No ofrece seguimiento en tiempo real como un GPS tradicional con tarjeta SIM.
+      </p>
+    </div>
+
+    <!-- PIE DE RECURSOS / PUNTOS CLAVE -->
+    <div class="bg-neutral-900 text-white rounded-2xl p-6 md:p-8 grid grid-cols-1 sm:grid-cols-4 gap-6">
+
+      <div class="flex items-start space-x-3">
+        <div class="bg-neutral-800 p-2.5 rounded-xl text-[#FA1E4E] shrink-0">
+          <i data-lucide="globe" class="w-6 h-6"></i>
+        </div>
+        <div>
+          <h4 class="font-bold text-sm">Cobertura colaborativa</h4>
+          <p class="text-xs text-neutral-400 mt-1">Funciona en cualquier país donde existan celulares Android o iPhone.</p>
+        </div>
+      </div>
+
+      <div class="flex items-start space-x-3">
+        <div class="bg-neutral-800 p-2.5 rounded-xl text-[#FA1E4E] shrink-0">
+          <i data-lucide="shield-check" class="w-6 h-6"></i>
+        </div>
+        <div>
+          <h4 class="font-bold text-sm">Privacidad garantizada</h4>
+          <p class="text-xs text-neutral-400 mt-1">La información es anónima y encriptada. Nadie accede a tus datos.</p>
+        </div>
+      </div>
+
+      <div class="flex items-start space-x-3">
+        <div class="bg-neutral-800 p-2.5 rounded-xl text-[#FA1E4E] shrink-0">
+          <i data-lucide="battery-charging" class="w-6 h-6"></i>
+        </div>
+        <div>
+          <h4 class="font-bold text-sm">Batería de larga duración</h4>
+          <p class="text-xs text-neutral-400 mt-1">Hasta 3 años de uso continuo sin necesidad de recargar.</p>
+        </div>
+      </div>
+
+      <div class="flex items-start space-x-3">
+        <div class="bg-neutral-800 p-2.5 rounded-xl text-[#FA1E4E] shrink-0">
+          <i data-lucide="smartphone" class="w-6 h-6"></i>
+        </div>
+        <div>
+          <h4 class="font-bold text-sm">Compatibilidad total</h4>
+          <p class="text-xs text-neutral-400 mt-1">Compatible con la red global de dispositivos Android y Apple iPhone.</p>
+        </div>
+      </div>
+
+    </div>
+
+  </section>
+
+  <!-- Inicialización de iconos + soporte de tema oscuro sincronizado con el sitio -->
+  <script>
+    lucide.createIcons();
+
+    function applyTheme(isDark) {
+      document.documentElement.classList.toggle('dark', isDark);
+    }
+    const params = new URLSearchParams(location.search);
+    applyTheme(params.get('theme') === 'dark');
+
+    // El sitio principal avisa aquí cuando alguien cambia de tema mientras esta
+    // sección ya está cargada, para que se actualice sin recargar el iframe.
+    window.addEventListener('message', (e) => {
+      if (e.data && e.data.type === 'gp-theme') applyTheme(e.data.dark === true);
+    });
+
+    // Ajusta la altura del iframe en la página principal al tamaño real del contenido
+    function reportHeight() {
+      const h = document.body.scrollHeight;
+      window.parent.postMessage({ type: 'gp-how-height', height: h }, '*');
+    }
+    window.addEventListener('load', reportHeight);
+    window.addEventListener('resize', reportHeight);
+    setTimeout(reportHeight, 300);
+  </script>
+
+</body>
+</html>

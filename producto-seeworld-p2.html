@@ -25,8 +25,8 @@
 <meta name="twitter:description" content="SEEWORLD P2, GPS para perros y gatos con monitoreo de salud (sueño, actividad, calorías). Resistente al agua IP67, batería de 10 días. Envío gratis en RD.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="preload" href="css/styles.css?v=45" as="style">
-<link rel="stylesheet" href="css/styles.css?v=45">
+<link rel="preload" href="css/styles.css?v=50" as="style">
+<link rel="stylesheet" href="css/styles.css?v=50">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@500;600&display=swap">
 
 </head>
@@ -80,7 +80,8 @@
   <header class="site-header">
     <div class="container header-inner">
       <a href="index.html" class="brand">
-        <img class="brand-logo" src="assets/images/logo-horizontal.png" alt="GPS Portátiles — Rastreo inteligente" width="182" height="64">
+        <img class="brand-icon" src="assets/images/isotipo-gpsportatiles.webp" alt="" width="44" height="44">
+        <span class="brand-name">GPS <strong>Portátiles</strong></span>
       </a>
       <nav class="main-nav" id="primary-navigation" aria-label="Navegación principal">
       <a href="index.html">Inicio</a>
@@ -121,8 +122,17 @@
             <span class="gallery-zoom-hint" aria-hidden="true">Clic para acercar</span>
           </div>
           <button type="button" class="btn-360" data-activate-360 hidden aria-label="Activar vista 360°, ver el GPS en pantalla completa y moverlo con el dedo">
-            <svg aria-hidden="true" focusable="false"><use href="#icon-360"></use></svg>
-            <span>Activar 360°</span>
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 220 60" width="220" height="60" aria-hidden="true" focusable="false">
+              <rect x="2" y="2" width="216" height="56" rx="28" fill="#6a6b6d"/>
+              <text x="28" y="38" font-family="Arial, Helvetica, sans-serif" font-weight="bold" font-size="25" fill="#ffffff" letter-spacing="-0.5">Activar</text>
+              <g transform="translate(120, 5)">
+                <text x="35" y="25" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-weight="bold" font-size="15" fill="#a0e7cf">360°</text>
+                <path d="M 52,24 C 55,36 18,40 16,33" fill="none" stroke="#a0e7cf" stroke-width="2.5" stroke-linecap="round"/>
+                <path d="M 53,24 C 52,14 16,14 16,24" fill="none" stroke="#a0e7cf" stroke-width="2.5" stroke-dasharray="2 1" stroke-linecap="round" opacity="0.3"/>
+                <path d="M 50,20 C 56,28 32,37 14,33" fill="none" stroke="#a0e7cf" stroke-width="2.6" stroke-linecap="round"/>
+                <path d="M 23,29 L 14,33 L 19,39" fill="none" stroke="#a0e7cf" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>
+              </g>
+            </svg>
           </button>
         </div>
 
@@ -154,14 +164,14 @@
               <a class="btn btn-outline btn-block" href="catalogo.html">Ver más productos</a>
             </div>
             <p class="buy-box-note">Vendido y garantizado por GPS Portátiles</p>
-          </div>
 
-          <h3 class="pdp-quickfacts-heading" data-quickfacts-heading hidden></h3>
-          <div class="pdp-quickfacts" data-product-quickfacts>
-            <div class="quickfact"><svg aria-hidden="true" focusable="false"><use href="#icon-signal"></use></svg><div><strong data-fact-red></strong><span>Red</span></div></div>
-            <div class="quickfact"><svg aria-hidden="true" focusable="false"><use href="#icon-battery"></use></svg><div><strong data-fact-bateria></strong><span>Batería</span></div></div>
-            <div class="quickfact"><svg aria-hidden="true" focusable="false"><use href="#icon-pin"></use></svg><div><strong data-fact-cobertura></strong><span>Cobertura</span></div></div>
-            <div class="quickfact"><svg aria-hidden="true" focusable="false"><use href="#icon-shield"></use></svg><div><strong data-fact-garantia></strong><span>Garantía</span></div></div>
+            <h3 class="pdp-quickfacts-heading" data-quickfacts-heading hidden></h3>
+            <div class="pdp-quickfacts" data-product-quickfacts>
+              <div class="quickfact"><svg aria-hidden="true" focusable="false"><use href="#icon-signal"></use></svg><div><strong data-fact-red></strong><span>Red</span></div></div>
+              <div class="quickfact"><svg aria-hidden="true" focusable="false"><use href="#icon-battery"></use></svg><div><strong data-fact-bateria></strong><span>Batería</span></div></div>
+              <div class="quickfact"><svg aria-hidden="true" focusable="false"><use href="#icon-pin"></use></svg><div><strong data-fact-cobertura></strong><span>Cobertura</span></div></div>
+              <div class="quickfact"><svg aria-hidden="true" focusable="false"><use href="#icon-shield"></use></svg><div><strong data-fact-garantia></strong><span>Garantía</span></div></div>
+            </div>
           </div>
         </aside>
 
@@ -224,66 +234,8 @@
           </section>
 
           <section class="pdp-how" data-how-block hidden aria-labelledby="h-how">
-            <div class="pdp-how-header">
-              <h2 id="h-how">¿CÓMO <span class="accent">FUNCIONA?</span></h2>
-              <p>El <strong>Mini TAG</strong> no usa GPS ni tarjeta SIM. Se conecta de forma inteligente a celulares Android e iPhone cercanos para mostrar su ubicación exacta en la app.</p>
-              <div class="pdp-how-badges">
-                <span class="pdp-how-badge"><svg aria-hidden="true" focusable="false"><use href="#icon-sim-off"></use></svg>No requiere SIM</span>
-                <span class="pdp-how-badge"><svg aria-hidden="true" focusable="false"><use href="#icon-nav-off"></use></svg>No usa GPS</span>
-                <span class="pdp-how-badge"><svg aria-hidden="true" focusable="false"><use href="#icon-battery"></use></svg>Batería de hasta 3 años</span>
-              </div>
-            </div>
-
-            <div class="pdp-how-steps">
-              <div class="pdp-how-step">
-                <span class="pdp-how-step-num">1</span>
-                <svg class="pdp-how-step-icon" aria-hidden="true" focusable="false"><use href="#icon-pin"></use></svg>
-                <h3>El TAG envía su señal</h3>
-                <p>El dispositivo emite una señal Bluetooth de bajo consumo constantemente.</p>
-              </div>
-              <div class="pdp-how-step">
-                <span class="pdp-how-step-num">2</span>
-                <svg class="pdp-how-step-icon" aria-hidden="true" focusable="false"><use href="#icon-smartphone"></use></svg>
-                <h3>Un celular cercano la detecta</h3>
-                <p>Cualquier celular Android o iPhone compatible que pase cerca recibe la señal de forma segura.</p>
-              </div>
-              <div class="pdp-how-step">
-                <span class="pdp-how-step-num">3</span>
-                <svg class="pdp-how-step-icon" aria-hidden="true" focusable="false"><use href="#icon-cloud"></use></svg>
-                <h3>Ubicación anónima a la nube</h3>
-                <p>El celular envía la ubicación aproximada del TAG a nuestros servidores, sin compartir datos personales.</p>
-              </div>
-              <div class="pdp-how-step">
-                <span class="pdp-how-step-num">4</span>
-                <svg class="pdp-how-step-icon" aria-hidden="true" focusable="false"><use href="#icon-map"></use></svg>
-                <h3>Ves la ubicación en la app</h3>
-                <p>Abre la app y consulta la última ubicación disponible, historial de recorridos y alertas.</p>
-              </div>
-            </div>
-
-            <div class="pdp-how-note">
-              <svg aria-hidden="true" focusable="false"><use href="#icon-info"></use></svg>
-              <p><strong>Importante:</strong> la ubicación se actualiza cuando el TAG entra en contacto con celulares compatibles cercanos. No ofrece seguimiento en tiempo real como un GPS tradicional con tarjeta SIM.</p>
-            </div>
-
-            <div class="pdp-how-footer">
-              <div class="pdp-how-footer-item">
-                <svg aria-hidden="true" focusable="false"><use href="#icon-globe"></use></svg>
-                <div><h4>Cobertura colaborativa</h4><p>Funciona en cualquier país donde existan celulares Android o iPhone.</p></div>
-              </div>
-              <div class="pdp-how-footer-item">
-                <svg aria-hidden="true" focusable="false"><use href="#icon-shield"></use></svg>
-                <div><h4>Privacidad garantizada</h4><p>La información es anónima y encriptada. Nadie accede a tus datos.</p></div>
-              </div>
-              <div class="pdp-how-footer-item">
-                <svg aria-hidden="true" focusable="false"><use href="#icon-battery"></use></svg>
-                <div><h4>Batería de larga duración</h4><p>Hasta 3 años de uso continuo sin necesidad de recargar.</p></div>
-              </div>
-              <div class="pdp-how-footer-item">
-                <svg aria-hidden="true" focusable="false"><use href="#icon-smartphone"></use></svg>
-                <div><h4>Compatibilidad total</h4><p>Compatible con la red global de dispositivos Android y Apple iPhone.</p></div>
-              </div>
-            </div>
+            <h2 id="h-how" class="visually-hidden">¿Cómo funciona el TAG?</h2>
+            <iframe class="pdp-how-frame" data-how-frame src="" title="¿Cómo funciona el Mini TAG?" loading="lazy"></iframe>
           </section>
 
           <section class="pdp-reviews" aria-labelledby="h-reviews">
@@ -413,6 +365,6 @@
 
   <script>document.getElementById('year').textContent = new Date().getFullYear();</script>
   <script src="js/products.js?v=14" defer></script>
-  <script src="js/main.js?v=28" defer></script>
+  <script src="js/main.js?v=29" defer></script>
 </body>
 </html>

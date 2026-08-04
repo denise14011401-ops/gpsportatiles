@@ -68,7 +68,13 @@
     const w = wrap.clientWidth;
     const h = wrap.clientHeight;
     renderer.setSize(w, h, false);
-    camera.aspect = w / h;
+    const aspect = w / h;
+    camera.aspect = aspect;
+    // En pantallas angostas (celular a pantalla completa) se agranda el
+    // campo de visión vertical para que el objeto no se vea recortado o
+    // demasiado acercado -- mantiene el ancho visible aproximadamente
+    // constante sin importar la forma del contenedor.
+    camera.fov = aspect < 1 ? Math.min(58, 35 / aspect) : 35;
     camera.updateProjectionMatrix();
   }
   window.addEventListener('resize', resize);

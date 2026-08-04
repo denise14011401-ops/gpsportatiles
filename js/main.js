@@ -467,7 +467,27 @@ function initProductDetail() {
 
   if (product.id === "rastreador-mini-tag") {
     const howBlock = document.querySelector("[data-how-block]");
-    if (howBlock) howBlock.hidden = false;
+    if (howBlock) {
+      howBlock.hidden = false;
+      const howFrame = howBlock.querySelector("[data-how-frame]");
+      const isDark = document.documentElement.getAttribute("data-theme") === "dark";
+      howFrame.src = `assets/how-funciona-tag.html?theme=${isDark ? "dark" : "light"}`;
+
+      window.addEventListener("message", (e) => {
+        if (!e.data || e.data.type !== "gp-how-height") return;
+        howFrame.style.height = `${e.data.height}px`;
+      });
+
+      const themeBtn = document.getElementById("themeToggle");
+      if (themeBtn) {
+        themeBtn.addEventListener("click", () => {
+          setTimeout(() => {
+            const nowDark = document.documentElement.getAttribute("data-theme") === "dark";
+            howFrame.contentWindow.postMessage({ type: "gp-theme", dark: nowDark }, "*");
+          }, 50);
+        });
+      }
+    }
     const specsSection = document.querySelector("[data-specs-section]");
     if (specsSection) specsSection.hidden = true;
   }
