@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 420" width="640" height="420">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#0B1120"/>
+      <stop offset="1" stop-color="#151d33"/>
+    </linearGradient>
+  </defs>
+  <rect width="640" height="420" rx="20" fill="url(#bg)"/>
+  <text x="320.0" y="46" text-anchor="middle" fill="#ffffff" font-family="Arial, Helvetica, sans-serif" font-size="26" font-weight="800">¿Para quién sirve?</text>
+  <text x="320.0" y="70" text-anchor="middle" fill="#8A93A8" font-family="Arial, Helvetica, sans-serif" font-size="13">GPS Vehicular Oculto OBD-2</text>
+  
+    <g transform="translate(115.0,105)">
+      <circle cx="45" cy="45" r="42" fill="#1a2233" stroke="#2a3550" stroke-width="1.5"/>
+      <g transform="translate(21,21)" stroke="#FA1E4E" stroke-width="1.7" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M5 17h14M5 17a2 2 0 01-2-2v-3l2-5h10l3 5v3a2 2 0 01-2 2M5 17a2 2 0 100 4 2 2 0 000-4zm14 0a2 2 0 100 4 2 2 0 000-4z"/></g>
+    </g>
+    <text x="160.0" y="220" text-anchor="middle" fill="#E5E9F2" font-family="Arial, Helvetica, sans-serif" font-size="17" font-weight="600">Autos particulares</text>
+    <g transform="translate(435.0,105)">
+      <circle cx="45" cy="45" r="42" fill="#1a2233" stroke="#2a3550" stroke-width="1.5"/>
+      <g transform="translate(21,21)" stroke="#FA1E4E" stroke-width="1.7" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M2 17h1M2 17a2 2 0 104 0M2 17V7h9v10M15 17H6M15 17a2 2 0 104 0M15 17h4v-4l-3-4h-1v8z"/></g>
+    </g>
+    <text x="480.0" y="220" text-anchor="middle" fill="#E5E9F2" font-family="Arial, Helvetica, sans-serif" font-size="17" font-weight="600">Camionetas de trabajo</text>
+    <g transform="translate(115.0,275)">
+      <circle cx="45" cy="45" r="42" fill="#1a2233" stroke="#2a3550" stroke-width="1.5"/>
+      <g transform="translate(21,21)" stroke="#FA1E4E" stroke-width="1.7" fill="none" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="10" width="8" height="6" rx="1"/><rect x="10" y="7" width="9" height="9" rx="1"/><circle cx="4" cy="18" r="1.6"/><circle cx="14" cy="18" r="1.6"/></g>
+    </g>
+    <text x="160.0" y="390" text-anchor="middle" fill="#E5E9F2" font-family="Arial, Helvetica, sans-serif" font-size="17" font-weight="600">Flotillas</text>
+    <g transform="translate(435.0,275)">
+      <circle cx="45" cy="45" r="42" fill="#1a2233" stroke="#2a3550" stroke-width="1.5"/>
+      <g transform="translate(21,21)" stroke="#FA1E4E" stroke-width="1.7" fill="none" stroke-linecap="round" stroke-linejoin="round"><circle cx="6" cy="17" r="3"/><circle cx="18" cy="17" r="3"/><path d="M9 17h4l2-6h3M9 17l-3-8h4l2 3"/></g>
+    </g>
+    <text x="480.0" y="390" text-anchor="middle" fill="#E5E9F2" font-family="Arial, Helvetica, sans-serif" font-size="17" font-weight="600">Vehículos rentados</text>
+</svg>

@@ -465,13 +465,13 @@ function initProductDetail() {
     quickfactsHeading.hidden = false;
   }
 
-  if (product.id === "rastreador-mini-tag") {
+  if (product.howFunciona) {
     const howBlock = document.querySelector("[data-how-block]");
     if (howBlock) {
       howBlock.hidden = false;
       const howFrame = howBlock.querySelector("[data-how-frame]");
       const isDark = document.documentElement.getAttribute("data-theme") === "dark";
-      howFrame.src = `assets/how-funciona-tag.html?theme=${isDark ? "dark" : "light"}`;
+      howFrame.src = `${product.howFunciona}?theme=${isDark ? "dark" : "light"}`;
 
       window.addEventListener("message", (e) => {
         if (!e.data || e.data.type !== "gp-how-height") return;
@@ -488,15 +488,17 @@ function initProductDetail() {
         });
       }
     }
-    const specsSection = document.querySelector("[data-specs-section]");
-    if (specsSection) specsSection.hidden = true;
   }
+  const specsSection = document.querySelector("[data-specs-section]");
+  if (specsSection) specsSection.hidden = true;
 
   const usesBlock = document.querySelector("[data-uses-block]");
-  if (usesBlock && product.id === "rastreador-mini-tag") {
+  if (usesBlock && product.usosImagen) {
     usesBlock.hidden = false;
     const usesToggle = usesBlock.querySelector("[data-uses-toggle]");
     const usesImg = usesBlock.querySelector(".zoomable-img");
+    usesImg.src = product.usosImagen;
+    usesImg.alt = `¿Para quién sirve el ${product.nombre}?`;
     usesToggle.addEventListener("click", () => usesImg.click());
   }
 

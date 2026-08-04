@@ -3,15 +3,13 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>¿Cómo funciona el TAG?</title>
-  <!-- Tailwind CSS CDN (para fácil integración) -->
+  <title>¿Cómo funciona SEEWORLD P2 GPS para Mascotas?</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
     tailwind.config = { darkMode: 'class' };
   </script>
   <style>
     html, body { background: transparent; }
-    /* Estilos personalizados para efectos sutiles */
     .pulse-effect {
       box-shadow: 0 0 0 0 rgba(250, 30, 78, 0.4);
       animation: pulse 2s infinite;
@@ -25,101 +23,85 @@
 </head>
 <body class="bg-gray-50 dark:bg-transparent text-gray-800 dark:text-gray-100 font-sans">
 
-  <!-- SECCIÓN PRINCIPAL: MINI TAG -->
   <section class="max-w-6xl mx-auto my-0 p-6 md:p-10 bg-white dark:bg-white/5 rounded-3xl shadow-xl border border-gray-100 dark:border-white/10">
 
-    <!-- ENCABEZADO -->
     <div class="text-center max-w-3xl mx-auto mb-12">
       <h2 class="text-4xl md:text-5xl font-extrabold text-gray-900 dark:text-white tracking-tight">
         ¿CÓMO <span class="text-[#FA1E4E]">FUNCIONA?</span>
       </h2>
       <p class="mt-4 text-lg text-gray-600 dark:text-gray-400 leading-relaxed">
-        El <strong>Mini TAG</strong> no usa GPS ni tarjeta SIM. Se conecta de forma inteligente a celulares Android e iPhone cercanos para mostrar su ubicación exacta en la app.
+        El <strong>SEEWORLD P2 GPS para Mascotas</strong> usa GPS real y conectividad 2G/4G propia para ubicarlo con precisión, en tiempo real, desde la app.
       </p>
 
-      <!-- BADGES RÁPIDOS DE CARACTERÍSTICAS -->
       <div class="flex flex-wrap justify-center gap-3 mt-6">
         <span class="inline-flex items-center px-4 py-2 rounded-full text-xs font-semibold bg-[#FA1E4E]/10 text-[#FA1E4E] border border-[#FA1E4E]/20">
-          <svg class="w-4 h-4 mr-1.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 3h7l4 4v13a1 1 0 01-1 1H7a1 1 0 01-1-1V4a1 1 0 011-1z"/><path d="M9 12h6v5H9z"/><line x1="3" y1="3" x2="21" y2="21"/></svg> No requiere SIM
+          <svg class="w-4 h-4 mr-1.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8"/><path d="M9 12a3 3 0 106 0 3 3 0 00-6 0z"/></svg> GPS real
         </span>
         <span class="inline-flex items-center px-4 py-2 rounded-full text-xs font-semibold bg-[#FA1E4E]/10 text-[#FA1E4E] border border-[#FA1E4E]/20">
-          <svg class="w-4 h-4 mr-1.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l7 16-7-4-7 4 4-9.5"/><line x1="3" y1="3" x2="21" y2="21"/></svg> No usa GPS
+          <svg class="w-4 h-4 mr-1.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="4" y1="20" x2="4" y2="14"/><line x1="10" y1="20" x2="10" y2="10"/><line x1="16" y1="20" x2="16" y2="6"/><line x1="22" y1="20" x2="22" y2="2"/></svg> Conectividad 2G/4G
         </span>
         <span class="inline-flex items-center px-4 py-2 rounded-full text-xs font-semibold bg-[#FA1E4E]/10 text-[#FA1E4E] border border-[#FA1E4E]/20">
-          <svg class="w-4 h-4 mr-1.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="6" width="18" height="12" rx="2"/><line x1="23" y1="10" x2="23" y2="14"/><polyline points="11 8 8 12 13 12 10 16"/></svg> Batería de hasta 3 años
+          <svg class="w-4 h-4 mr-1.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="6" width="18" height="12" rx="2"/><line x1="23" y1="10" x2="23" y2="14"/><polyline points="11 8 8 12 13 12 10 16"/></svg> Hasta 10 días de uso
         </span>
       </div>
     </div>
 
-    <!-- PASOS DE FUNCIONAMIENTO (1 AL 4) -->
     <div class="grid grid-cols-1 sm:grid-cols-4 gap-6 relative mb-12">
 
-      <!-- Paso 1 -->
       <div class="bg-gray-50 dark:bg-white/5 rounded-2xl p-5 border border-gray-100 dark:border-white/10 flex flex-col items-center text-center relative group hover:shadow-md transition">
         <div class="absolute -top-3 left-4 bg-[#FA1E4E] text-white font-bold rounded-full w-7 h-7 flex items-center justify-center text-sm shadow">1</div>
         <div class="w-24 h-24 my-4 flex items-center justify-center">
-          <!-- Renderizado CSS del Mini TAG Redondo -->
-          <div class="w-20 h-20 rounded-full bg-neutral-900 border-4 border-neutral-800 pulse-effect flex items-center justify-center shadow-lg relative">
-            <div class="w-14 h-14 rounded-full border border-neutral-700 flex flex-col items-center justify-center text-white">
-              <svg class="w-5 h-5 text-[#FA1E4E] fill-[#FA1E4E]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a7 7 0 00-7 7c0 5.25 7 13 7 13s7-7.75 7-13a7 7 0 00-7-7z"/><circle cx="12" cy="9" r="2.6"/></svg>
-              <span class="text-[8px] font-black tracking-widest mt-0.5">MINI TAG</span>
-            </div>
-          </div>
+          <svg class="w-16 h-16 text-[#FA1E4E]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8"/><path d="M9 12a3 3 0 106 0 3 3 0 00-6 0z"/></svg>
         </div>
-        <h3 class="font-bold text-gray-900 dark:text-white mb-1">El TAG envía su señal</h3>
-        <p class="text-xs text-gray-500 dark:text-gray-400">El dispositivo emite una señal Bluetooth de bajo consumo constantemente.</p>
+        <h3 class="font-bold text-gray-900 dark:text-white mb-1">Se sujeta al collar</h3>
+        <p class="text-xs text-gray-500 dark:text-gray-400">Se engancha fácil y liviano al collar de tu perro o gato, sin incomodarlo.</p>
       </div>
 
-      <!-- Paso 2 -->
       <div class="bg-gray-50 dark:bg-white/5 rounded-2xl p-5 border border-gray-100 dark:border-white/10 flex flex-col items-center text-center relative group hover:shadow-md transition">
         <div class="absolute -top-3 left-4 bg-[#FA1E4E] text-white font-bold rounded-full w-7 h-7 flex items-center justify-center text-sm shadow">2</div>
         <div class="w-24 h-24 my-4 flex items-center justify-center text-[#FA1E4E]">
-          <svg class="w-16 h-16 text-gray-800 dark:text-gray-200" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="2.5" width="12" height="19" rx="2.2"/><line x1="10.5" y1="18.2" x2="13.5" y2="18.2"/></svg>
+          <svg class="w-16 h-16 text-gray-800 dark:text-gray-200" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 8.5a16 16 0 0120 0M5 12a11 11 0 0114 0M8.5 15.5a6 6 0 017 0"/><circle cx="12" cy="19" r="0.7" fill="currentColor" stroke="none"/></svg>
         </div>
-        <h3 class="font-bold text-gray-900 dark:text-white mb-1">Un celular cercano la detecta</h3>
-        <p class="text-xs text-gray-500 dark:text-gray-400">Cualquier celular Android o iPhone compatible que pase cerca recibe la señal de forma segura.</p>
+        <h3 class="font-bold text-gray-900 dark:text-white mb-1">Transmite por red</h3>
+        <p class="text-xs text-gray-500 dark:text-gray-400">Con su SIM integrada, envía la ubicación de tu mascota de forma constante.</p>
       </div>
 
-      <!-- Paso 3 -->
       <div class="bg-gray-50 dark:bg-white/5 rounded-2xl p-5 border border-gray-100 dark:border-white/10 flex flex-col items-center text-center relative group hover:shadow-md transition">
         <div class="absolute -top-3 left-4 bg-[#FA1E4E] text-white font-bold rounded-full w-7 h-7 flex items-center justify-center text-sm shadow">3</div>
         <div class="w-24 h-24 my-4 flex items-center justify-center text-blue-500">
-          <svg class="w-16 h-16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.5 19a4.5 4.5 0 00.5-8.98A6 6 0 006.5 8.5 5 5 0 007 18.5"/><circle cx="17" cy="19" r="0.6" fill="currentColor" stroke="none"/></svg>
+          <svg class="w-16 h-16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="7" rx="1.5"/><rect x="2" y="14" width="20" height="7" rx="1.5"/><line x1="6" y1="6.5" x2="6.01" y2="6.5"/><line x1="6" y1="17.5" x2="6.01" y2="17.5"/></svg>
         </div>
-        <h3 class="font-bold text-gray-900 dark:text-white mb-1">Ubicación anónima a la nube</h3>
-        <p class="text-xs text-gray-500 dark:text-gray-400">El celular envía la ubicación aproximada del TAG a nuestros servidores (sin compartir datos personales).</p>
+        <h3 class="font-bold text-gray-900 dark:text-white mb-1">Datos encriptados</h3>
+        <p class="text-xs text-gray-500 dark:text-gray-400">La ubicación y actividad de tu mascota se guardan de forma segura.</p>
       </div>
 
-      <!-- Paso 4 -->
       <div class="bg-gray-50 dark:bg-white/5 rounded-2xl p-5 border border-gray-100 dark:border-white/10 flex flex-col items-center text-center relative group hover:shadow-md transition">
         <div class="absolute -top-3 left-4 bg-[#FA1E4E] text-white font-bold rounded-full w-7 h-7 flex items-center justify-center text-sm shadow">4</div>
         <div class="w-24 h-24 my-4 flex items-center justify-center text-gray-800 dark:text-gray-200">
-          <svg class="w-16 h-16 text-[#FA1E4E]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="9 4 3 6 3 20 9 18 15 20 21 18 21 4 15 6 9 4"/><line x1="9" y1="4" x2="9" y2="18"/><line x1="15" y1="6" x2="15" y2="20"/></svg>
+          <svg class="w-16 h-16 text-[#FA1E4E]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="2.5" width="12" height="19" rx="2.2"/><line x1="10.5" y1="18.2" x2="13.5" y2="18.2"/></svg>
         </div>
-        <h3 class="font-bold text-gray-900 dark:text-white mb-1">Ves la ubicación en la app</h3>
-        <p class="text-xs text-gray-500 dark:text-gray-400">Abre la app y consulta la última ubicación disponible, historial de recorridos y alertas.</p>
+        <h3 class="font-bold text-gray-900 dark:text-white mb-1">Lo ves en la app COOLPET</h3>
+        <p class="text-xs text-gray-500 dark:text-gray-400">Consulta ubicación en vivo, actividad y alertas de salida de zona.</p>
       </div>
 
     </div>
 
-    <!-- NOTA DE ADVERTENCIA / ACLARACIÓN -->
     <div class="bg-amber-50 dark:bg-amber-500/10 border-l-4 border-amber-500 p-4 rounded-r-xl mb-12 flex items-start gap-3">
       <svg class="w-6 h-6 text-amber-600 dark:text-amber-400 shrink-0 mt-0.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="12" x2="12" y2="16.5"/><circle cx="12" cy="8" r="0.6" fill="currentColor" stroke="none"/></svg>
       <p class="text-xs md:text-sm text-amber-900 dark:text-amber-200">
-        <strong>Importante:</strong> La ubicación se actualiza cuando el TAG entra en contacto con celulares compatibles cercanos. No ofrece seguimiento en tiempo real como un GPS tradicional con tarjeta SIM.
+        <strong>Importante:</strong> a diferencia del Rastreador Mini TAG (que usa una red Bluetooth colaborativa sin SIM), el SEEWORLD P2 GPS para Mascotas funciona con GPS real y requiere conectividad 2G/4G activa para reportar su ubicación.
       </p>
     </div>
 
-    <!-- PIE DE RECURSOS / PUNTOS CLAVE -->
     <div class="bg-neutral-900 text-white rounded-2xl p-6 md:p-8 grid grid-cols-1 sm:grid-cols-4 gap-6">
 
       <div class="flex items-start space-x-3">
         <div class="bg-neutral-800 p-2.5 rounded-xl text-[#FA1E4E] shrink-0">
-          <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15 15 0 010 20 15 15 0 010-20z"/></svg>
+          <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a7 7 0 00-7 7c0 5.25 7 13 7 13s7-7.75 7-13a7 7 0 00-7-7z"/><circle cx="12" cy="9" r="2.6"/></svg>
         </div>
         <div>
-          <h4 class="font-bold text-sm">Cobertura colaborativa</h4>
-          <p class="text-xs text-neutral-400 mt-1">Funciona en cualquier país donde existan celulares Android o iPhone.</p>
+          <h4 class="font-bold text-sm">Ubicación en tiempo real</h4>
+          <p class="text-xs text-neutral-400 mt-1">Sabes dónde está, actualizado al instante desde la app.</p>
         </div>
       </div>
 
@@ -129,7 +111,7 @@
         </div>
         <div>
           <h4 class="font-bold text-sm">Privacidad garantizada</h4>
-          <p class="text-xs text-neutral-400 mt-1">La información es anónima y encriptada. Nadie accede a tus datos.</p>
+          <p class="text-xs text-neutral-400 mt-1">La información es encriptada. Nadie más accede a tus datos.</p>
         </div>
       </div>
 
@@ -139,17 +121,17 @@
         </div>
         <div>
           <h4 class="font-bold text-sm">Batería de larga duración</h4>
-          <p class="text-xs text-neutral-400 mt-1">Hasta 3 años de uso continuo sin necesidad de recargar.</p>
+          <p class="text-xs text-neutral-400 mt-1">Batería de 800 mAh: hasta 10 días de uso.</p>
         </div>
       </div>
 
       <div class="flex items-start space-x-3">
         <div class="bg-neutral-800 p-2.5 rounded-xl text-[#FA1E4E] shrink-0">
-          <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="2.5" width="12" height="19" rx="2.2"/><line x1="10.5" y1="18.2" x2="13.5" y2="18.2"/></svg>
+          <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4.9 16.1C1 12.2 1 5.8 4.9 1.9M19.1 1.9c3.9 3.9 3.9 10.3 0 14.2M7.8 13.2a5 5 0 010-7M16.2 6.2a5 5 0 010 7M12 10a1 1 0 100-2 1 1 0 000 2z"/><path d="M12 10v12M9 22h6"/></svg>
         </div>
         <div>
-          <h4 class="font-bold text-sm">Compatibilidad total</h4>
-          <p class="text-xs text-neutral-400 mt-1">Compatible con la red global de dispositivos Android y Apple iPhone.</p>
+          <h4 class="font-bold text-sm">Conectividad 2G/4G</h4>
+          <p class="text-xs text-neutral-400 mt-1">Red 2G/4G con tarjeta SIM ya integrada, lista para usar.</p>
         </div>
       </div>
 
@@ -157,7 +139,6 @@
 
   </section>
 
-  <!-- Inicialización de iconos + soporte de tema oscuro sincronizado con el sitio -->
   <script>
     function applyTheme(isDark) {
       document.documentElement.classList.toggle('dark', isDark);
@@ -165,16 +146,10 @@
     const params = new URLSearchParams(location.search);
     applyTheme(params.get('theme') === 'dark');
 
-    // El sitio principal avisa aquí cuando alguien cambia de tema mientras esta
-    // sección ya está cargada, para que se actualice sin recargar el iframe.
     window.addEventListener('message', (e) => {
       if (e.data && e.data.type === 'gp-theme') applyTheme(e.data.dark === true);
     });
 
-    // Ajusta la altura del iframe en la página principal al tamaño real del contenido.
-    // Se usa ResizeObserver para detectar cualquier cambio de tamaño (fuentes que
-    // cargan tarde, Tailwind aplicándose después del primer pintado, cambio de
-    // tema, etc.) y no depender de un solo cálculo puntual que puede quedar corto.
     function reportHeight() {
       const h = document.documentElement.scrollHeight;
       window.parent.postMessage({ type: 'gp-how-height', height: h }, '*');
